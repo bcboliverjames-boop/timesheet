@@ -1,0 +1,391 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== 多租户表 ====================
+
+model Tenant {
+  id          String   @id @default(uuid())
+  name        String
+  subdomain   String   @unique
+  email       String
+  phone       String?
+  address     String?
+  status      TenantStatus @default(ACTIVE)
+  plan        TenantPlan @default(BASIC)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  users       User[]
+  warehouses  Warehouse[]
+  products    Product[]
+  suppliers   Supplier[]
+  customers   Customer[]
+  
+  @@index([subdomain])
+  @@index([status])
+}
+
+enum TenantStatus {
+  ACTIVE
+  SUSPENDED
+  INACTIVE
+}
+
+enum TenantPlan {
+  BASIC
+  PRO
+  ENTERPRISE
+}
+
+// ==================== 用户和权限 ====================
+
+model User {
+  id          String   @id @default(uuid())
+  tenantId    String
+  email       String
+  password    String
+  name        String
+  phone       String?
+  avatar      String?
+  role        String   @default("user")
+  status      UserStatus @default(ACTIVE)
+  lastLoginAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  inboundOrders InboundOrder[]
+  outboundOrders OutboundOrder[]
+  
+  @@unique([tenantId, email])
+  @@index([tenantId])
+  @@index([email])
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+// ==================== 仓库管理 ====================
+
+model Warehouse {
+  id          String   @id @default(uuid())
+  tenantId    String
+  code        String
+  name        String
+  address     String?
+  contact     String?
+  phone       String?
+  managerId   String?
+  status      WarehouseStatus @default(ACTIVE)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  locations   Location[]
+  inventory   Inventory[]
+  
+  @@unique([tenantId, code])
+  @@index([tenantId])
+  @@index([status])
+}
+
+enum WarehouseStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Location {
+  id          String   @id @default(uuid())
+  warehouseId String
+  code        String
+  name        String
+  zone        String?  // 区域
+  aisle       String?  // 通道
+  shelf       String?  // 货架
+  position    String?  // 位置
+  capacity    Float?   // 容量
+  status      LocationStatus @default(AVAILABLE)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  inventory   Inventory[]
+  inboundItems  InboundItem[]
+  outboundItems OutboundItem[]
+  
+  @@unique([warehouseId, code])
+  @@index([warehouseId])
+  @@index([status])
+}
+
+enum LocationStatus {
+  AVAILABLE
+  OCCUPIED
+  RESERVED
+  MAINTENANCE
+}
+
+// ==================== 商品管理 ====================
+
+model Product {
+  id          String   @id @default(uuid())
+  tenantId    String
+  sku         String   // 商品编码
+  barcode     String?  // 条码
+  name        String
+  description String?
+  category    String?
+  unit        String   @default("件") // 单位：件、箱、kg等
+  specs       String?  // 规格
+  image       String?
+  status      ProductStatus @default(ACTIVE)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  inventory   Inventory[]
+  inboundItems  InboundItem[]
+  outboundItems OutboundItem[]
+  
+  @@unique([tenantId, sku])
+  @@index([tenantId])
+  @@index([sku])
+  @@index([status])
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  DISCONTINUED
+}
+
+// ==================== 库存管理 ====================
+
+model Inventory {
+  id          String   @id @default(uuid())
+  tenantId    String
+  warehouseId String
+  locationId  String?
+  productId   String
+  quantity    Float    @default(0)
+  reservedQty Float    @default(0) // 预留数量
+  availableQty Float   @default(0) // 可用数量 = quantity - reservedQty
+  minStock    Float?   // 最小库存
+  maxStock    Float?   // 最大库存
+  lastUpdated DateTime @default(now()) @updatedAt
+  
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  location    Location? @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  @@unique([warehouseId, productId, locationId])
+  @@index([tenantId])
+  @@index([warehouseId])
+  @@index([productId])
+}
+
+// ==================== 入库管理 ====================
+
+model InboundOrder {
+  id          String   @id @default(uuid())
+  tenantId    String
+  orderNo     String   // 入库单号
+  warehouseId String
+  type        InboundType
+  supplierId  String?  // 供应商ID（采购入库时使用）
+  orderRef    String?  // 关联的采购订单号
+  status      InboundStatus @default(PENDING)
+  expectedDate DateTime?
+  receivedDate DateTime?
+  createdBy   String
+  approvedBy  String?
+  remark      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  items       InboundItem[]
+  creator     User     @relation(fields: [createdBy], references: [id])
+  
+  @@unique([tenantId, orderNo])
+  @@index([tenantId])
+  @@index([orderNo])
+  @@index([status])
+  @@index([warehouseId])
+}
+
+enum InboundType {
+  PURCHASE    // 采购入库
+  RETURN      // 退货入库
+  TRANSFER_IN // 调拨入库
+  OTHER       // 其他入库
+}
+
+enum InboundStatus {
+  PENDING     // 待审核
+  APPROVED    // 已审核
+  IN_PROGRESS // 入库中
+  COMPLETED   // 已完成
+  CANCELLED   // 已取消
+}
+
+model InboundItem {
+  id            String   @id @default(uuid())
+  inboundOrderId String
+  productId     String
+  locationId    String?
+  expectedQty   Float    // 预期数量
+  receivedQty   Float    @default(0) // 已收数量
+  unitPrice     Float?   // 单价
+  batchNo       String?  // 批次号
+  expiryDate    DateTime? // 过期日期
+  remark        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  inboundOrder  InboundOrder @relation(fields: [inboundOrderId], references: [id], onDelete: Cascade)
+  product       Product      @relation(fields: [productId], references: [id])
+  location      Location?    @relation(fields: [locationId], references: [id])
+  
+  @@index([inboundOrderId])
+  @@index([productId])
+}
+
+// ==================== 出库管理 ====================
+
+model OutboundOrder {
+  id          String   @id @default(uuid())
+  tenantId    String
+  orderNo     String   // 出库单号
+  warehouseId String
+  type        OutboundType
+  customerId  String?  // 客户ID（销售出库时使用）
+  orderRef    String?  // 关联的销售订单号
+  status      OutboundStatus @default(PENDING)
+  expectedDate DateTime?
+  shippedDate  DateTime?
+  createdBy   String
+  approvedBy  String?
+  remark      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  items       OutboundItem[]
+  creator     User     @relation(fields: [createdBy], references: [id])
+  
+  @@unique([tenantId, orderNo])
+  @@index([tenantId])
+  @@index([orderNo])
+  @@index([status])
+  @@index([warehouseId])
+}
+
+enum OutboundType {
+  SALE        // 销售出库
+  TRANSFER_OUT // 调拨出库
+  RETURN      // 退货出库
+  DAMAGE      // 报损出库
+  OTHER       // 其他出库
+}
+
+enum OutboundStatus {
+  PENDING     // 待审核
+  APPROVED    // 已审核
+  IN_PROGRESS // 出库中
+  COMPLETED   // 已完成
+  CANCELLED   // 已取消
+}
+
+model OutboundItem {
+  id            String   @id @default(uuid())
+  outboundOrderId String
+  productId     String
+  locationId    String?
+  requestedQty  Float    // 申请数量
+  shippedQty    Float    @default(0) // 已出数量
+  batchNo       String?  // 批次号
+  remark        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  outboundOrder OutboundOrder @relation(fields: [outboundOrderId], references: [id], onDelete: Cascade)
+  product       Product       @relation(fields: [productId], references: [id])
+  location      Location?     @relation(fields: [locationId], references: [id])
+  
+  @@index([outboundOrderId])
+  @@index([productId])
+}
+
+// ==================== 供应商和客户 ====================
+
+model Supplier {
+  id          String   @id @default(uuid())
+  tenantId    String
+  code        String
+  name        String
+  contact     String?
+  phone       String?
+  email       String?
+  address     String?
+  taxId       String?  // 税号
+  status      SupplierStatus @default(ACTIVE)
+  rating      Int?     @default(0) // 评级 0-5
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  @@unique([tenantId, code])
+  @@index([tenantId])
+  @@index([status])
+}
+
+enum SupplierStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Customer {
+  id          String   @id @default(uuid())
+  tenantId    String
+  code        String
+  name        String
+  contact     String?
+  phone       String?
+  email       String?
+  address     String?
+  level       CustomerLevel @default(REGULAR)
+  status      CustomerStatus @default(ACTIVE)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  @@unique([tenantId, code])
+  @@index([tenantId])
+  @@index([status])
+}
+
+enum CustomerLevel {
+  VIP
+  GOLD
+  SILVER
+  REGULAR
+}
+
+enum CustomerStatus {
+  ACTIVE
+  INACTIVE
+}
+

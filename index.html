@@ -115,7 +115,7 @@
       display: flex;
       gap: 0.75rem;
       flex-wrap: wrap;
-      align-items: flex-end;
+      align-items: center;
     }
     .leave-range label {
       flex: 1;
@@ -131,7 +131,7 @@
       color: #fff;
       border: none;
       border-radius: 6px;
-      padding: 0.4rem 0.9rem;
+      padding: 0.45rem 1rem;
       cursor: pointer;
     }
     .leave-range button:hover {
@@ -312,7 +312,7 @@
       </div>
       <div class="leave-section" aria-label="加班设置">
         <label>
-          是否有加班
+          是否有加班（计薪）
           <select id="overtimeToggle" name="overtimeToggle">
             <option value="no" selected>否</option>
             <option value="yes">是</option>
@@ -329,6 +329,7 @@
               总加班天数
               <input type="text" id="overtimeTotal" readonly value="0 天">
             </label>
+            <small class="hours-hint">（8 个小时换算为 1 天，1 个自然日最多加班 24 小时，可换算为 3 天）</small>
           </div>
         </div>
       </div>
@@ -343,6 +344,10 @@
       <label>
         金额
         <input type="number" id="rateAmount" name="rateAmount" min="0" step="0.01" placeholder="请输入对应薪资金额" required>
+      </label>
+      <label>
+        币种
+        <input type="text" id="currencyDisplay" readonly value="--">
       </label>
       <button type="submit">计算收入</button>
     </form>
@@ -432,6 +437,11 @@
       }
     };
 
+    const CURRENCY_MAP = {
+      china: '人民币 (CNY)',
+      us: '美元 (USD)',
+      eu: '欧元 (EUR)'
+    };
     const holidayLabelCache = new Map();
     const makeupLabelCache = new Map();
 
@@ -454,6 +464,12 @@
       }
       holidayLabelCache.set(key, map);
       return map;
+    }
+
+    function updateCurrencyDisplay() {
+      if (!currencyDisplay) return;
+      const country = countrySelect?.value || 'china';
+      currencyDisplay.value = countryCurrency(country);
     }
 
     function getMakeupLabelMap(country, year) {
@@ -488,6 +504,8 @@
     const results = document.getElementById('results');
     const rateTypeSelect = document.getElementById('rateType');
     const rateAmountInput = document.getElementById('rateAmount');
+    const currencyDisplay = document.getElementById('currencyDisplay');
+    const countrySelect = form.querySelector('select[name="country"]');
     const leaveToggle = document.getElementById('leaveToggle');
     const leaveRangesWrapper = document.getElementById('leaveRanges');
     const leaveRangesList = document.getElementById('leaveRangesList');
@@ -535,6 +553,8 @@
         type: 'overtime'
       });
       calculateLeaveData();
+      updateCurrencyDisplay();
+      countrySelect?.addEventListener('change', updateCurrencyDisplay);
       if (exportButton) {
         exportButton.addEventListener('click', handleExport);
       }
@@ -639,6 +659,7 @@
           continue;
         }
         if (leaveWeight > 0) {
+          excluded.push({ date: iso, reason: `请假 ${formatDayCount(leaveWeight)} 天（部分扣减）`, type: 'leave_partial' });
           dayWeight -= leaveWeight;
         }
         days += dayWeight;
@@ -703,6 +724,7 @@
       const endDate = new Date(end);
       const summaryRows = [
         ['国家/地区', countryLabel(country)],
+        ['币种', countryCurrency(country)],
         ['期间', `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`],
         ['工作日', formatDayCount(data.workdays)],
         ['总工时', formatDayCount(data.hours)],
@@ -770,6 +792,10 @@
 
     function countryLabel(code) {
       return { china: '中国', us: '美国', eu: '欧洲' }[code] || code;
+    }
+
+    function countryCurrency(code) {
+      return CURRENCY_MAP[code] || code?.toUpperCase() || '---';
     }
 
     function applyDateConstraints() {
@@ -879,7 +905,7 @@
             </thead>
             <tbody>
               ${data.includedDays.map((item, idx) => {
-                const className = item.type === 'overtime' ? 'text-danger' : '';
+                const className = item.type === 'workday' ? '' : 'text-danger';
                 const detail = `计薪 ${formatDayCount(item.weight || 1)} 天 · ${item.reason}`;
                 return `
                   <tr class="${className}">
@@ -907,7 +933,7 @@
             </thead>
             <tbody>
               ${data.excludedDays.map((item, idx) => {
-                const className = item.type === 'leave' ? 'text-danger' : '';
+                const className = item.type === 'leave' || item.type === 'leave_partial' ? 'text-danger' : '';
                 return `
                   <tr class="${className}">
                     <td>${idx + 1}</td>
@@ -925,7 +951,7 @@
         <h2>${countryMap[country]} · ${start.toLocaleDateString()} 至 ${end.toLocaleDateString()}</h2>
         <p>共计 <strong>${formatDayCount(data.workdays)}</strong> 个工作日 / <strong>${formatDayCount(data.hours)}</strong> 个工作小时（按 ${HOURS_PER_DAY} 小时/天估算）</p>
         <div class="grid">
-          ${createCard('总收入', `总收入：${formula}`)}
+          ${createCard('总收入', `总收入：${formula}<br />币种：${countryCurrency(country)}`)}
         </div>
         <p>总请假天数：<strong>${formatDayCount(data.leaveTotal)}</strong> 天 · 总加班天数：<strong>${formatDayCount(data.overtimeDays)}</strong> 天</p>
         <section class="details-section">
@@ -1135,7 +1161,7 @@
         hoursInput.value = '';
         hoursInput.disabled = true;
         if (hint) {
-          hint.textContent = '请选择开始和结束日期以自动计算，最多每天 24 小时';
+          hint.textContent = '';
         }
         return;
       }
@@ -1145,7 +1171,7 @@
         hoursInput.value = '';
         hoursInput.disabled = true;
         if (hint) {
-          hint.textContent = '请选择有效的日期范围';
+          hint.textContent = '';
         }
         return;
       }
@@ -1165,7 +1191,7 @@
       hoursInput.dataset.defaultValue = String(defaultHours);
       hoursInput.dataset.maxValue = String(maxHours);
       if (hint) {
-        hint.textContent = `自动：${defaultHours} 小时（共 ${days} 天，每天 ${HOURS_PER_DAY} 小时），最多 ${maxHours} 小时`;
+        hint.textContent = '';
       }
     }
 

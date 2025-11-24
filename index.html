@@ -168,6 +168,10 @@
       background: #f5f7fa;
       font-weight: 600;
     }
+    .hours-hint {
+      font-size: 0.85rem;
+      color: #888;
+    }
     .details-section {
       margin-top: 1.5rem;
       border: 1px solid #e0e0e0;
@@ -178,6 +182,32 @@
     .details-section h3 {
       margin-top: 0;
       margin-bottom: 0.75rem;
+    }
+    .details-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0;
+    }
+    .details-table th,
+    .details-table td {
+      border-bottom: 1px solid #f0f0f0;
+      padding: 0.5rem;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+    .details-table th {
+      background: #f7f9fc;
+      font-weight: 600;
+    }
+    .details-table tr:last-child td {
+      border-bottom: none;
+    }
+    .details-table input {
+      width: 100%;
+      border: 1px solid #d0d7de;
+      border-radius: 6px;
+      padding: 0.35rem 0.5rem;
+      font-size: 0.95rem;
     }
     .details-section ul,
     .details-section ol {
@@ -280,8 +310,7 @@
       <label>
         薪资方案
         <select id="rateType" name="rateType" required>
-          <option value="">请选择薪资方案</option>
-          <option value="daily">日薪</option>
+          <option value="daily" selected>日薪</option>
           <option value="hourly">时薪</option>
           <option value="monthly">月薪</option>
         </select>
@@ -417,6 +446,7 @@
 
     const HOURS_PER_DAY = 8;
     const WORKDAYS_PER_MONTH = 22;
+    const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
     const DATE_RANGE = (() => {
       const today = new Date();
@@ -456,7 +486,8 @@
         allowHalfDay: true,
         startLabel: '请假开始日期',
         endLabel: '请假结束日期',
-        onChange: () => calculateLeaveData()
+        onChange: () => calculateLeaveData(),
+        type: 'leave'
       });
       setupRangeSection({
         toggle: overtimeToggle,
@@ -466,7 +497,8 @@
         hint: overtimeHint,
         allowHalfDay: false,
         startLabel: '加班开始日期',
-        endLabel: '加班结束日期'
+        endLabel: '加班结束日期',
+        type: 'overtime'
       });
       calculateLeaveData();
     });
@@ -487,8 +519,14 @@
 
       const leaveData = calculateLeaveData();
       const leaveDaysMap = leaveData.map;
-      const overtimeDays = collectRangeSet(overtimeToggle, overtimeRangesList);
-      const workingDayResult = countWorkingDays(startDate, endDate, country, leaveDaysMap, overtimeDays);
+      const overtimeData = collectOvertimeData(overtimeToggle, overtimeRangesList);
+      const workingDayResult = countWorkingDays(
+        startDate,
+        endDate,
+        country,
+        leaveDaysMap,
+        overtimeData?.map
+      );
       if (workingDayResult.days === 0) {
         return renderMessage('所选期间无工作日，请调整日期范围。');
       }
@@ -514,7 +552,7 @@
         includedDays: workingDayResult.included,
         excludedDays: workingDayResult.excluded,
         leaveTotal: leaveData.total,
-        overtimeDays: countCoveredDays(overtimeDays, startDate, endDate)
+        overtimeDays: overtimeData?.totalDays ?? 0
       };
 
       renderResults(calculation, country, startDate, endDate, rateSelection);
@@ -538,7 +576,7 @@
       return { isWorkday: true, type: 'workday' };
     }
 
-    function countWorkingDays(start, end, country, leaveDaysMap, overtimeDaysSet) {
+    function countWorkingDays(start, end, country, leaveDaysMap, overtimeMap) {
       let days = 0;
       const excluded = [];
       const included = [];
@@ -546,12 +584,17 @@
         const cloned = new Date(dt);
         const iso = toInputDate(cloned);
         const status = getWorkdayStatus(cloned, country);
-        const hasOvertime = Boolean(overtimeDaysSet?.has(iso));
+        const overtimeWeight = overtimeMap?.get(iso) ?? 0;
+        const hasOvertime = overtimeWeight > 0;
         if (!status.isWorkday && !hasOvertime) {
           excluded.push({ date: iso, reason: status.reason || '非工作日', type: status.type || 'nonwork' });
           continue;
         }
-        let dayWeight = 1;
+        let dayWeight = hasOvertime ? overtimeWeight : 1;
+        if (dayWeight <= 0) {
+          excluded.push({ date: iso, reason: '加班时长为 0，未计入', type: 'overtime' });
+          continue;
+        }
         const leaveWeightRaw = leaveDaysMap?.get(iso) ?? 0;
         const leaveWeight = Math.max(Math.min(leaveWeightRaw, dayWeight), 0);
         if (leaveWeight >= dayWeight) {
@@ -595,6 +638,14 @@
       const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
       startInput.value = toInputDate(startOfLastMonth);
       endInput.value = toInputDate(endOfLastMonth);
+      if (rateTypeSelect) {
+        rateTypeSelect.value = 'daily';
+      }
+    }
+
+    function getLastMonthStartDate() {
+      const now = new Date();
+      return toInputDate(new Date(now.getFullYear(), now.getMonth() - 1, 1));
     }
 
     function getRateSelection() {
@@ -662,21 +713,59 @@
       const countryMap = { china: '中国', us: '美国', eu: '欧洲' };
       const formula = `${formatDayCount(data.workdays)}天 × ${formatter.format(data.dailyRate)} = ${formatter.format(data.totalIncome)}`;
       const paydaysContent = data.includedDays?.length
-        ? `<ol>
-            ${data.includedDays.map((item, idx) => {
-              const className = item.type === 'overtime' ? 'text-danger' : '';
-              const detail = `计薪 ${formatDayCount(item.weight || 1)} 天 · ${item.reason}`;
-              return `<li class="${className}"><span>${idx + 1}. ${item.date}</span><span>${detail}</span></li>`;
-            }).join('')}
-           </ol>`
+        ? `
+          <table class="details-table">
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th>日期</th>
+                <th>计薪说明</th>
+                <th>工作内容</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${data.includedDays.map((item, idx) => {
+                const className = item.type === 'overtime' ? 'text-danger' : '';
+                const detail = `计薪 ${formatDayCount(item.weight || 1)} 天 · ${item.reason}`;
+                return `
+                  <tr class="${className}">
+                    <td>${idx + 1}</td>
+                    <td>${item.date}</td>
+                    <td>${detail}</td>
+                    <td><input type="text" value="努力工作的一天" aria-label="工作内容"></td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        `
         : '<p>本周期内无计薪日。</p>';
       const excludedContent = data.excludedDays?.length
-        ? `<ol>
-            ${data.excludedDays.map((item, idx) => {
-              const className = item.type === 'leave' ? 'text-danger' : '';
-              return `<li class="${className}"><span>${idx + 1}. ${item.date}</span><span>${item.reason}</span></li>`;
-            }).join('')}
-           </ol>`
+        ? `
+          <table class="details-table">
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th>日期</th>
+                <th>排除原因</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${data.excludedDays.map((item, idx) => {
+                const className = item.type === 'leave' ? 'text-danger' : '';
+                return `
+                  <tr class="${className}">
+                    <td>${idx + 1}</td>
+                    <td>${item.date}</td>
+                    <td>${item.reason}</td>
+                    <td><input type="text" value="${item.reason}" aria-label="备注"></td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        `
         : '<p>本周期内无被排除的日期。</p>';
       results.innerHTML = `
         <h2>${countryMap[country]} · ${start.toLocaleDateString()} 至 ${end.toLocaleDateString()}</h2>
@@ -735,10 +824,11 @@
     }
 
     function addRangeRow(section) {
-      const { list, startLabel, endLabel, allowHalfDay, onChange } = section;
+      const { list, startLabel, endLabel, allowHalfDay, onChange, type } = section;
       if (!list) return;
       const range = document.createElement('div');
       range.className = 'leave-range';
+      const isOvertime = type === 'overtime';
       const halfDayControls = allowHalfDay
         ? `
             <label>
@@ -751,6 +841,15 @@
             </label>
           `
         : '';
+      const overtimeControls = isOvertime
+        ? `
+            <label>
+              加班时长（小时）
+              <input type="number" class="overtime-hours" min="0" step="0.5" inputmode="decimal">
+            </label>
+            <small class="hours-hint">请选择开始和结束日期以自动计算，最多每天 24 小时</small>
+          `
+        : '';
       range.innerHTML = `
         <label>
           ${startLabel}
@@ -761,6 +860,7 @@
           <input type="date" class="leave-end">
         </label>
         ${halfDayControls}
+        ${overtimeControls}
         <button type="button" class="remove-leave-range" aria-label="删除区间">删除</button>
       `;
       const removeBtn = range.querySelector('.remove-leave-range');
@@ -773,51 +873,151 @@
         onChange?.();
       });
       list.appendChild(range);
-      range.querySelectorAll('input, select').forEach((control) => {
-        control.addEventListener('change', () => onChange?.());
+      const startInput = range.querySelector('.leave-start');
+      const endInput = range.querySelector('.leave-end');
+      const defaultDate = getLastMonthStartDate();
+      if (startInput && !startInput.value) {
+        startInput.value = defaultDate;
+      }
+      if (endInput && !endInput.value) {
+        endInput.value = defaultDate;
+      }
+      const controls = range.querySelectorAll('input, select');
+      controls.forEach((control) => {
+        control.addEventListener('change', () => {
+          if (
+            isOvertime &&
+            (control.classList.contains('leave-start') || control.classList.contains('leave-end'))
+          ) {
+            const hoursInput = range.querySelector('.overtime-hours');
+            if (hoursInput) {
+              hoursInput.dataset.userEdited = 'false';
+              updateOvertimeHours(range, true);
+            }
+          }
+          onChange?.();
+        });
       });
+      if (isOvertime) {
+        const hoursInput = range.querySelector('.overtime-hours');
+        if (hoursInput) {
+          hoursInput.dataset.userEdited = 'false';
+          hoursInput.addEventListener('input', () => {
+            hoursInput.dataset.userEdited = 'true';
+            enforceOvertimeHours(hoursInput);
+            onChange?.();
+          });
+          hoursInput.addEventListener('blur', () => {
+            enforceOvertimeHours(hoursInput);
+          });
+        }
+        updateOvertimeHours(range, true);
+      }
       onChange?.();
     }
 
-    function collectRangeSet(toggle, list) {
+    function collectOvertimeData(toggle, list) {
       if (!toggle || toggle.value !== 'yes') return null;
       const ranges = list?.querySelectorAll('.leave-range');
       if (!ranges?.length) return null;
-      const rangeSet = new Set();
+      const overtimeMap = new Map();
+      let totalDays = 0;
       ranges.forEach((range) => {
-        const startInput = range.querySelector('.leave-start');
-        const endInput = range.querySelector('.leave-end');
-        const start = startInput?.value;
-        const end = endInput?.value;
-        if (start && end) {
-          addRangeToSet(start, end, rangeSet);
+        const start = range.querySelector('.leave-start')?.value;
+        const end = range.querySelector('.leave-end')?.value;
+        if (!start || !end) return;
+        const dates = enumerateDateRange(start, end);
+        if (!dates.length) return;
+        const hoursInput = range.querySelector('.overtime-hours');
+        const defaultHours = dates.length * HOURS_PER_DAY;
+        const maxHours = dates.length * 24;
+        let hoursValue = Number(hoursInput?.value);
+        if (!Number.isFinite(hoursValue) || hoursValue < 0) {
+          hoursValue = defaultHours;
         }
+        hoursValue = Math.min(hoursValue, maxHours);
+        const totalDayWeight = dates.length ? hoursValue / HOURS_PER_DAY : 0;
+        const perDayWeight = dates.length ? totalDayWeight / dates.length : 0;
+        if (perDayWeight <= 0) {
+          return;
+        }
+        dates.forEach((iso) => {
+          const current = overtimeMap.get(iso) ?? 0;
+          overtimeMap.set(iso, current + perDayWeight);
+        });
+        totalDays += totalDayWeight;
       });
-      return rangeSet.size ? rangeSet : null;
+      return overtimeMap.size ? { map: overtimeMap, totalDays } : null;
     }
 
-    function countCoveredDays(rangeSet, start, end) {
-      if (!rangeSet?.size) return 0;
-      const startIso = toInputDate(start);
-      const endIso = toInputDate(end);
-      let count = 0;
-      rangeSet.forEach((iso) => {
-        if (iso >= startIso && iso <= endIso) {
-          count += 1;
+    function updateOvertimeHours(range, forceDefault = false) {
+      const hoursInput = range.querySelector('.overtime-hours');
+      const hint = range.querySelector('.hours-hint');
+      if (!hoursInput) return;
+      const startValue = range.querySelector('.leave-start')?.value;
+      const endValue = range.querySelector('.leave-end')?.value;
+      if (!startValue || !endValue) {
+        hoursInput.value = '';
+        hoursInput.disabled = true;
+        if (hint) {
+          hint.textContent = '请选择开始和结束日期以自动计算，最多每天 24 小时';
         }
-      });
-      return count;
+        return;
+      }
+      const startDate = new Date(startValue);
+      const endDate = new Date(endValue);
+      if (Number.isNaN(startDate) || Number.isNaN(endDate) || endDate < startDate) {
+        hoursInput.value = '';
+        hoursInput.disabled = true;
+        if (hint) {
+          hint.textContent = '请选择有效的日期范围';
+        }
+        return;
+      }
+      hoursInput.disabled = false;
+      const days = Math.floor((endDate.getTime() - startDate.getTime()) / MS_PER_DAY) + 1;
+      const defaultHours = days * HOURS_PER_DAY;
+      const maxHours = days * 24;
+      hoursInput.min = 0;
+      hoursInput.max = maxHours;
+      let current = Number(hoursInput.value);
+      const userEdited = hoursInput.dataset.userEdited === 'true';
+      if (!userEdited || forceDefault || Number.isNaN(current)) {
+        current = defaultHours;
+      }
+      current = Math.min(Math.max(current, 0), maxHours);
+      hoursInput.value = current;
+      hoursInput.dataset.defaultValue = String(defaultHours);
+      hoursInput.dataset.maxValue = String(maxHours);
+      if (hint) {
+        hint.textContent = `自动：${defaultHours} 小时（共 ${days} 天，每天 ${HOURS_PER_DAY} 小时），最多 ${maxHours} 小时`;
+      }
     }
 
-    function addRangeToSet(startStr, endStr, targetSet) {
+    function enforceOvertimeHours(hoursInput) {
+      if (!hoursInput) return;
+      const max = Number(hoursInput.dataset.maxValue);
+      let value = Number(hoursInput.value);
+      if (!Number.isFinite(value) || value < 0) {
+        value = 0;
+      }
+      if (Number.isFinite(max) && value > max) {
+        value = max;
+      }
+      hoursInput.value = value;
+    }
+
+    function enumerateDateRange(startStr, endStr) {
       const start = new Date(startStr);
       const end = new Date(endStr);
       if (Number.isNaN(start) || Number.isNaN(end) || end < start) {
-        return;
+        return [];
       }
-      for (let dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1)) {
-        targetSet.add(toInputDate(dt));
+      const dates = [];
+      for (let time = start.getTime(); time <= end.getTime(); time += MS_PER_DAY) {
+        dates.push(toInputDate(new Date(time)));
       }
+      return dates;
     }
 
     function calculateLeaveData() {

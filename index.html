@@ -209,6 +209,25 @@
       padding: 0.35rem 0.5rem;
       font-size: 0.95rem;
     }
+    .results-wrapper {
+      position: relative;
+    }
+    .export-button {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: #13c2c2;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-weight: 600;
+      padding: 0.5rem 1.25rem;
+      cursor: pointer;
+    }
+    .export-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
     .details-section ul,
     .details-section ol {
       list-style: none;
@@ -285,7 +304,7 @@
           </div>
           <div class="leave-total" id="leaveTotalContainer" hidden>
             <label>
-              总请假日
+              总请假天数
               <input type="text" id="leaveTotal" readonly value="0 天">
             </label>
           </div>
@@ -305,6 +324,12 @@
             <button type="button" id="addOvertimeRange">新增加班区间</button>
             <span class="range-hint">加班区间包含开始和结束日期，可添加多段加班区间。</span>
           </div>
+          <div class="leave-total" id="overtimeTotalContainer" hidden>
+            <label>
+              总加班天数
+              <input type="text" id="overtimeTotal" readonly value="0 天">
+            </label>
+          </div>
         </div>
       </div>
       <label>
@@ -322,9 +347,12 @@
       <button type="submit">计算收入</button>
     </form>
 
-    <div class="results" id="results">
-      <h2>请填写信息并计算</h2>
-      <p class="note">系统会根据工作日（剔除双休日与法定节假日）估算工作时长与收入。</p>
+    <div class="results-wrapper">
+      <button type="button" id="exportResults" class="export-button" disabled>导出结果（Excel）</button>
+      <div class="results" id="results">
+        <h2>请填写信息并计算</h2>
+        <p class="note">系统会根据工作日（剔除双休日与法定节假日）估算工作时长与收入。</p>
+      </div>
     </div>
   </div>
 
@@ -472,6 +500,11 @@
     const overtimeRangesList = document.getElementById('overtimeRangesList');
     const addOvertimeRangeBtn = document.getElementById('addOvertimeRange');
     const overtimeHint = overtimeRangesWrapper?.querySelector('.range-hint');
+    const overtimeTotalContainer = document.getElementById('overtimeTotalContainer');
+    const overtimeTotalInput = document.getElementById('overtimeTotal');
+    const exportButton = document.getElementById('exportResults');
+
+    let lastResultSnapshot = null;
 
     document.addEventListener('DOMContentLoaded', () => {
       applyDateConstraints();
@@ -495,12 +528,16 @@
         list: overtimeRangesList,
         addBtn: addOvertimeRangeBtn,
         hint: overtimeHint,
+        totalContainer: overtimeTotalContainer,
         allowHalfDay: false,
         startLabel: '加班开始日期',
         endLabel: '加班结束日期',
         type: 'overtime'
       });
       calculateLeaveData();
+      if (exportButton) {
+        exportButton.addEventListener('click', handleExport);
+      }
     });
 
     form.addEventListener('submit', (event) => {
@@ -616,6 +653,123 @@
         });
       }
       return { days, excluded, included };
+    }
+
+    function handleExport() {
+      if (!lastResultSnapshot) return;
+      const payload = buildExportPayload(lastResultSnapshot);
+      const workbook = buildExportWorkbook(payload);
+      const blob = new Blob(['\ufeff' + workbook], {
+        type: 'application/vnd.ms-excel'
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      const startLabel = new Date(payload.start).toISOString().slice(0, 10);
+      const endLabel = new Date(payload.end).toISOString().slice(0, 10);
+      link.href = url;
+      link.download = `临时工收入-${startLabel}_至_${endLabel}.xls`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    function buildExportPayload(payload) {
+      const workContentInputs = Array.from(document.querySelectorAll('.details-table input[aria-label="工作内容"]'));
+      const excludedNoteInputs = Array.from(document.querySelectorAll('.details-table input[aria-label="备注"]'));
+      const includedNotes = workContentInputs.map((input) => input.value.trim() || '努力工作的一天');
+      const excludedNotes = excludedNoteInputs.map((input, idx) => input.value.trim() || payload.data.excludedDays?.[idx]?.reason || '');
+      const includedRows = (payload.data.includedDays || []).map((item, index) => ({
+        ...item,
+        note: includedNotes[index] || '努力工作的一天'
+      }));
+      const excludedRows = (payload.data.excludedDays || []).map((item, index) => ({
+        ...item,
+        note: excludedNotes[index] || item.reason
+      }));
+      return {
+        ...payload,
+        data: {
+          ...payload.data,
+          includedDays: includedRows,
+          excludedDays: excludedRows
+        }
+      };
+    }
+
+    function buildExportWorkbook(payload) {
+      const { data, country, start, end, rateSelection } = payload;
+      const startDate = new Date(start);
+      const endDate = new Date(end);
+      const summaryRows = [
+        ['国家/地区', countryLabel(country)],
+        ['期间', `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`],
+        ['工作日', formatDayCount(data.workdays)],
+        ['总工时', formatDayCount(data.hours)],
+        ['总收入', formatCurrency(data.totalIncome)],
+        ['薪资方案', describeSelection(rateSelection)]
+      ];
+      const paydaysRows = (data.includedDays || []).map((item, idx) => [
+        idx + 1,
+        item.date,
+        formatDayCount(item.weight || 1),
+        item.reason,
+        item.note || '努力工作的一天'
+      ]);
+      const excludedRows = (data.excludedDays || []).map((item, idx) => [
+        idx + 1,
+        item.date,
+        item.reason,
+        item.note || item.reason
+      ]);
+      let html = '<html><head><meta charset="UTF-8"></head><body>';
+      html += '<table border="1">';
+      summaryRows.forEach((row) => {
+        html += '<tr>' + row.map((cell) => `<th>${escapeHtml(cell)}</th>`).join('') + '</tr>';
+      });
+      html += '</table><br />';
+      html += '<table border="1"><thead><tr><th>序号</th><th>日期</th><th>计薪天数</th><th>计薪说明</th><th>工作内容</th></tr></thead><tbody>';
+      if (paydaysRows.length) {
+        paydaysRows.forEach((row) => {
+          html += '<tr>' + row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join('') + '</tr>';
+        });
+      } else {
+        html += '<tr><td colspan="5">无计薪日</td></tr>';
+      }
+      html += '</tbody></table><br />';
+      html += '<table border="1"><thead><tr><th>序号</th><th>日期</th><th>排除原因</th><th>备注</th></tr></thead><tbody>';
+      if (excludedRows.length) {
+        excludedRows.forEach((row) => {
+          html += '<tr>' + row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join('') + '</tr>';
+        });
+      } else {
+        html += '<tr><td colspan="4">无被排除的日期</td></tr>';
+      }
+      html += '</tbody></table>';
+      html += '</body></html>';
+      return html;
+    }
+
+    function escapeHtml(value) {
+      if (value === null || value === undefined) return '';
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatCurrency(value) {
+      const formatter = new Intl.NumberFormat('zh-CN', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      return formatter.format(value ?? 0);
+    }
+
+    function countryLabel(code) {
+      return { china: '中国', us: '美国', eu: '欧洲' }[code] || code;
     }
 
     function applyDateConstraints() {
@@ -784,6 +938,16 @@
         </section>
         <p class="note">基础薪资：${describeSelection(rateSelection)}。总收入 = 工作日 × 折算日薪；折算规则：日薪=输入金额，时薪=输入 × ${HOURS_PER_DAY} 小时，月薪=输入 ÷ ${WORKDAYS_PER_MONTH} 工作日。</p>
       `;
+      lastResultSnapshot = {
+        data,
+        country,
+        start,
+        end,
+        rateSelection
+      };
+      if (exportButton) {
+        exportButton.disabled = false;
+      }
     }
 
     function createCard(title, value) {
@@ -917,9 +1081,15 @@
     }
 
     function collectOvertimeData(toggle, list) {
-      if (!toggle || toggle.value !== 'yes') return null;
+      if (!toggle || toggle.value !== 'yes') {
+        updateOvertimeTotalDisplay(0, false);
+        return null;
+      }
       const ranges = list?.querySelectorAll('.leave-range');
-      if (!ranges?.length) return null;
+      if (!ranges?.length) {
+        updateOvertimeTotalDisplay(0, true);
+        return null;
+      }
       const overtimeMap = new Map();
       let totalDays = 0;
       ranges.forEach((range) => {
@@ -947,6 +1117,11 @@
         });
         totalDays += totalDayWeight;
       });
+      if (totalDays > 0) {
+        updateOvertimeTotalDisplay(totalDays, true);
+      } else {
+        updateOvertimeTotalDisplay(0, true);
+      }
       return overtimeMap.size ? { map: overtimeMap, totalDays } : null;
     }
 
@@ -992,6 +1167,14 @@
       if (hint) {
         hint.textContent = `自动：${defaultHours} 小时（共 ${days} 天，每天 ${HOURS_PER_DAY} 小时），最多 ${maxHours} 小时`;
       }
+    }
+
+    function updateOvertimeTotalDisplay(total, enabled) {
+      if (!overtimeTotalContainer || !overtimeTotalInput) return;
+      overtimeTotalContainer.hidden = !enabled;
+      overtimeTotalContainer.classList.toggle('visible', enabled);
+      const value = enabled ? formatDayCount(total || 0) : '0';
+      overtimeTotalInput.value = `${value} 天`;
     }
 
     function enforceOvertimeHours(hoursInput) {

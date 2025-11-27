@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>即梦AI无水印下载助手｜隐私政策</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f7f7f8;
+        --card: #ffffff;
+        --border: #e2e3e5;
+        --text: #1c1d1f;
+        --muted: #5f6163;
+        --accent: #0071e3;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f1115;
+          --card: #181b21;
+          --border: #2a2d35;
+          --text: #f4f5f7;
+          --muted: #a0a4ad;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "SF Pro Display", "SF Pro SC", "PingFang SC", "Microsoft YaHei",
+          system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+      header {
+        padding: 48px 24px 24px;
+        text-align: center;
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(28px, 6vw, 40px);
+        letter-spacing: 0.01em;
+      }
+      .subtitle {
+        color: var(--muted);
+        font-size: 16px;
+      }
+      main {
+        max-width: 780px;
+        margin: 0 auto 64px;
+        padding: 0 24px 24px;
+      }
+      section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 28px;
+        margin-bottom: 24px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+      }
+      section h2 {
+        margin-top: 0;
+        font-size: 20px;
+      }
+      ul {
+        padding-left: 18px;
+        margin: 12px 0 0;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      footer {
+        text-align: center;
+        color: var(--muted);
+        padding: 24px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>即梦AI无水印下载助手隐私政策</h1>
+      <div class="subtitle">最后更新：2025-11-27</div>
+    </header>
+    <main>
+      <section>
+        <h2>我们收集哪些数据？</h2>
+        <p>本扩展不收集、不存储任何可识别的个人信息。</p>
+        <p>我们不会读取您在网页上的输入内容，也不会记录浏览历史、账户信息或下载记录。</p>
+      </section>
+
+      <section>
+        <h2>权限使用说明</h2>
+        <ul>
+          <li>
+            <strong>downloads：</strong>仅在用户点击「下载无水印」按钮时调用
+            <code>chrome.downloads.download</code>，将即梦AI展示的图片直接保存到本地。
+          </li>
+          <li>
+            <strong>storage：</strong>用于在浏览器本地保存未来的选项设置（例如是否优先原图），不与任何服务器同步。
+          </li>
+          <li>
+            <strong>host_permissions（jimeng.jianying.com/* 与 *.byteimg.com/*）：</strong
+            >只在即梦AI作品详情页注入按钮，并读取页面内的图片链接，不访问其他域名。
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>数据传输与存储</h2>
+        <p>所有逻辑均在本地浏览器执行，我们不会将任何数据上传到外部服务器。</p>
+        <p>下载的文件由 Chrome 浏览器直接处理，扩展不会修改、扫描或转存文件内容。</p>
+      </section>
+
+      <section>
+        <h2>第三方共享</h2>
+        <p>我们不与任何第三方共享、出售或出租数据，不嵌入广告或统计脚本。</p>
+      </section>
+
+      <section>
+        <h2>安全措施</h2>
+        <p>扩展仅在 HTTPS 页面运行，并对下载链接进行基础校验，防止恶意或非官方资源。</p>
+        <p>如果发现潜在风险或扩展被滥用，我们会立即通过更新或下架来保障用户安全。</p>
+      </section>
+
+      <section>
+        <h2>用户选择</h2>
+        <p>
+          您可以随时在 <code>chrome://extensions</code> 中禁用或卸载该扩展；卸载后，保存在
+          <code>chrome.storage</code> 中的设置会同时删除。
+        </p>
+        <p>
+          如有任何隐私相关问题或建议，请发送邮件至
+          <a href="mailto:support@jimeng-watermarkfree.app"
+            >support@jimeng-watermarkfree.app</a
+          >
+          （示例邮箱，可替换为你的实际邮箱），我们将尽快回复。
+        </p>
+      </section>
+    </main>
+    <footer>© 2025 即梦AI无水印下载助手</footer>
+  </body>
+</html>
+

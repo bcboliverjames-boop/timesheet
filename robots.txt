@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://www.xmoto.top/sitemap.xml
+
+# Disallow specific files if needed
+# Disallow: /private/
+

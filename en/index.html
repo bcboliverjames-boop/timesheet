@@ -867,7 +867,23 @@
         <select name="country" required>
           <option value="china">China</option>
           <option value="us">United States</option>
-          <option value="eu">Europe</option>
+          <!-- European Countries -->
+          <option value="russia">Russia</option>
+          <option value="germany">Germany</option>
+          <option value="uk">United Kingdom</option>
+          <option value="france">France</option>
+          <option value="italy">Italy</option>
+          <option value="spain">Spain</option>
+          <option value="poland">Poland</option>
+          <option value="ukraine">Ukraine</option>
+          <option value="romania">Romania</option>
+          <option value="netherlands">Netherlands</option>
+          <!-- Asian Countries -->
+          <option value="japan">Japan</option>
+          <option value="korea">South Korea</option>
+          <option value="singapore">Singapore</option>
+          <option value="india">India</option>
+          <option value="indonesia">Indonesia</option>
         </select>
       </label>
       </div>
@@ -1038,29 +1054,246 @@
         yearSpecific: {},
         makeupWorkdays: {}
       },
-      eu: {
+      // European Countries (by population)
+      russia: {
         recurring: [
           { date: '01-01', label: 'New Year\'s Day' },
-          { date: '04-18', label: 'Good Friday' },
-          { date: '04-21', label: 'Easter Monday' },
+          { date: '01-07', label: 'Orthodox Christmas' },
+          { date: '02-23', label: 'Defender of the Fatherland Day' },
+          { date: '03-08', label: 'International Women\'s Day' },
+          { date: '05-01', label: 'Labour Day' },
+          { date: '05-09', label: 'Victory Day' },
+          { date: '06-12', label: 'Russia Day' },
+          { date: '11-04', label: 'Unity Day' }
+        ],
+        yearSpecific: {},
+        makeupWorkdays: {}
+      },
+      germany: {
+        recurring: [
+          { date: '01-01', label: 'New Year\'s Day' },
+          { date: '05-01', label: 'Labour Day' },
+          { date: '10-03', label: 'German Unity Day' },
+          { date: '12-25', label: 'Christmas Day' },
+          { date: '12-26', label: 'Boxing Day' }
+        ],
+        yearSpecific: {},
+        makeupWorkdays: {}
+      },
+      uk: {
+        recurring: [
+          { date: '01-01', label: 'New Year\'s Day' },
+          { date: '05-01', label: 'Early May Bank Holiday' },
+          { date: '12-25', label: 'Christmas Day' },
+          { date: '12-26', label: 'Boxing Day' }
+        ],
+        yearSpecific: {},
+        makeupWorkdays: {}
+      },
+      france: {
+        recurring: [
+          { date: '01-01', label: 'New Year\'s Day' },
           { date: '05-01', label: 'Labour Day' },
           { date: '05-08', label: 'Victory Day' },
-          { date: '05-29', label: 'Ascension Day' },
-          { date: '06-09', label: 'Whit Monday' },
+          { date: '07-14', label: 'Bastille Day' },
           { date: '08-15', label: 'Assumption Day' },
           { date: '11-01', label: 'All Saints\' Day' },
-          { date: '12-25', label: 'Christmas' },
+          { date: '11-11', label: 'Armistice Day' },
+          { date: '12-25', label: 'Christmas Day' }
+        ],
+        yearSpecific: {},
+        makeupWorkdays: {}
+      },
+      italy: {
+        recurring: [
+          { date: '01-01', label: 'New Year\'s Day' },
+          { date: '04-25', label: 'Liberation Day' },
+          { date: '05-01', label: 'Labour Day' },
+          { date: '06-02', label: 'Republic Day' },
+          { date: '08-15', label: 'Assumption Day' },
+          { date: '11-01', label: 'All Saints\' Day' },
+          { date: '12-25', label: 'Christmas Day' },
           { date: '12-26', label: 'Boxing Day' }
+        ],
+        yearSpecific: {},
+        makeupWorkdays: {}
+      },
+      spain: {
+        recurring: [
+          { date: '01-01', label: 'New Year\'s Day' },
+          { date: '05-01', label: 'Labour Day' },
+          { date: '10-12', label: 'National Day' },
+          { date: '11-01', label: 'All Saints\' Day' },
+          { date: '12-06', label: 'Constitution Day' },
+          { date: '12-25', label: 'Christmas Day' }
+        ],
+        yearSpecific: {},
+        makeupWorkdays: {}
+      },
+      poland: {
+        recurring: [
+          { date: '01-01', label: 'New Year\'s Day' },
+          { date: '05-01', label: 'Labour Day' },
+          { date: '05-03', label: 'Constitution Day' },
+          { date: '08-15', label: 'Assumption Day' },
+          { date: '11-01', label: 'All Saints\' Day' },
+          { date: '11-11', label: 'Independence Day' },
+          { date: '12-25', label: 'Christmas Day' },
+          { date: '12-26', label: 'Boxing Day' }
+        ],
+        yearSpecific: {},
+        makeupWorkdays: {}
+      },
+      ukraine: {
+        recurring: [
+          { date: '01-01', label: 'New Year\'s Day' },
+          { date: '01-07', label: 'Orthodox Christmas' },
+          { date: '03-08', label: 'International Women\'s Day' },
+          { date: '05-01', label: 'Labour Day' },
+          { date: '05-09', label: 'Victory Day' },
+          { date: '06-28', label: 'Constitution Day' },
+          { date: '08-24', label: 'Independence Day' }
+        ],
+        yearSpecific: {},
+        makeupWorkdays: {}
+      },
+      romania: {
+        recurring: [
+          { date: '01-01', label: 'New Year\'s Day' },
+          { date: '01-02', label: 'Day after New Year\'s Day' },
+          { date: '05-01', label: 'Labour Day' },
+          { date: '06-01', label: 'Children\'s Day' },
+          { date: '08-15', label: 'Assumption Day' },
+          { date: '11-30', label: 'National Day' },
+          { date: '12-01', label: 'National Day' },
+          { date: '12-25', label: 'Christmas Day' },
+          { date: '12-26', label: 'Boxing Day' }
+        ],
+        yearSpecific: {},
+        makeupWorkdays: {}
+      },
+      netherlands: {
+        recurring: [
+          { date: '01-01', label: 'New Year\'s Day' },
+          { date: '04-27', label: 'King\'s Day' },
+          { date: '05-05', label: 'Liberation Day' },
+          { date: '12-25', label: 'Christmas Day' },
+          { date: '12-26', label: 'Boxing Day' }
+        ],
+        yearSpecific: {},
+        makeupWorkdays: {}
+      },
+      // Asian Countries
+      japan: {
+        recurring: [
+          { date: '01-01', label: 'New Year\'s Day' },
+          { date: '02-11', label: 'National Foundation Day' },
+          { date: '04-29', label: 'Showa Day' },
+          { date: '05-03', label: 'Constitution Memorial Day' },
+          { date: '05-04', label: 'Greenery Day' },
+          { date: '05-05', label: 'Children\'s Day' },
+          { date: '08-11', label: 'Mountain Day' },
+          { date: '11-03', label: 'Culture Day' },
+          { date: '11-23', label: 'Labour Thanksgiving Day' },
+          { date: '12-23', label: 'Emperor\'s Birthday' }
+        ],
+        yearSpecific: {},
+        makeupWorkdays: {}
+      },
+      korea: {
+        recurring: [
+          { date: '01-01', label: 'New Year\'s Day' },
+          { date: '03-01', label: 'Independence Movement Day' },
+          { date: '05-05', label: 'Children\'s Day' },
+          { date: '06-06', label: 'Memorial Day' },
+          { date: '08-15', label: 'Liberation Day' },
+          { date: '10-03', label: 'National Foundation Day' },
+          { date: '10-09', label: 'Hangul Day' },
+          { date: '12-25', label: 'Christmas Day' }
+        ],
+        yearSpecific: {},
+        makeupWorkdays: {}
+      },
+      singapore: {
+        recurring: [
+          { date: '01-01', label: 'New Year\'s Day' },
+          { date: '05-01', label: 'Labour Day' },
+          { date: '08-09', label: 'National Day' },
+          { date: '12-25', label: 'Christmas Day' }
+        ],
+        yearSpecific: {},
+        makeupWorkdays: {}
+      },
+      india: {
+        recurring: [
+          { date: '01-26', label: 'Republic Day' },
+          { date: '08-15', label: 'Independence Day' },
+          { date: '10-02', label: 'Gandhi Jayanti' }
+        ],
+        yearSpecific: {},
+        makeupWorkdays: {}
+      },
+      indonesia: {
+        recurring: [
+          { date: '01-01', label: 'New Year\'s Day' },
+          { date: '05-01', label: 'Labour Day' },
+          { date: '08-17', label: 'Independence Day' },
+          { date: '12-25', label: 'Christmas Day' }
         ],
         yearSpecific: {},
         makeupWorkdays: {}
       }
     };
 
+    // 国家代码映射表（用于Nager.Date API）
+    const COUNTRY_CODE_MAP = {
+      // 现有国家
+      china: null, // 中国使用GitHub API，不使用Nager.Date
+      us: 'US',
+      
+      // 欧洲国家（按人口排序）
+      russia: 'RU',
+      germany: 'DE',
+      uk: 'GB', // 注意：Nager.Date使用GB而非UK
+      france: 'FR',
+      italy: 'IT',
+      spain: 'ES',
+      poland: 'PL',
+      ukraine: 'UA',
+      romania: 'RO',
+      netherlands: 'NL',
+      
+      // 亚洲国家
+      japan: 'JP',
+      korea: 'KR',
+      singapore: 'SG',
+      india: 'IN',
+      indonesia: 'ID'
+    };
+
     const CURRENCY_MAP = {
+      // 现有国家
       china: 'CNY (Chinese Yuan)',
       us: 'USD (US Dollar)',
-      eu: 'EUR (Euro)'
+      
+      // 欧洲国家
+      russia: 'RUB (Russian Ruble)',
+      germany: 'EUR (Euro)',
+      uk: 'GBP (British Pound)',
+      france: 'EUR (Euro)',
+      italy: 'EUR (Euro)',
+      spain: 'EUR (Euro)',
+      poland: 'PLN (Polish Zloty)',
+      ukraine: 'UAH (Ukrainian Hryvnia)',
+      romania: 'RON (Romanian Leu)',
+      netherlands: 'EUR (Euro)',
+      
+      // 亚洲国家
+      japan: 'JPY (Japanese Yen)',
+      korea: 'KRW (South Korean Won)',
+      singapore: 'SGD (Singapore Dollar)',
+      india: 'INR (Indian Rupee)',
+      indonesia: 'IDR (Indonesian Rupiah)'
     };
     const holidayLabelCache = new Map();
     const makeupLabelCache = new Map();
@@ -1102,6 +1335,88 @@
       } catch (e) {
         console.warn('保存节假日缓存失败:', e);
       }
+    }
+
+    // 从 Nager.Date API 加载节假日数据
+    async function loadHolidayDataFromNagerAPI(countryCode, year) {
+      const url = `https://date.nager.at/api/v3/PublicHolidays/${year}/${countryCode}`;
+      
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
+        
+        const response = await fetch(url, {
+          signal: controller.signal,
+          cache: 'default',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log(`[Nager API] ${countryCode} ${year}年数据加载成功，数量:`, data.length);
+          
+          // 转换数据格式
+          const yearSpecific = [];
+          data.forEach(item => {
+            if (item.date && item.localName) {
+              yearSpecific.push({
+                date: item.date,
+                label: item.localName
+              });
+            }
+          });
+          
+          const result = {
+            yearSpecific: yearSpecific.length > 0 ? { [year]: yearSpecific } : {},
+            makeupWorkdays: {} // Nager.Date API 不提供调休补班数据
+          };
+          
+          // 缓存数据
+          const cacheKey = `nager_holiday_${countryCode}_${year}`;
+          try {
+            localStorage.setItem(cacheKey, JSON.stringify({
+              data: result,
+              timestamp: Date.now()
+            }));
+          } catch (e) {
+            console.warn('缓存Nager API数据失败:', e);
+          }
+          
+          return result;
+        } else {
+          console.warn(`[Nager API] ${countryCode} ${year}年返回状态码: ${response.status}`);
+          return null;
+        }
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          console.warn(`[Nager API] ${countryCode} ${year}年请求超时`);
+        } else {
+          console.warn(`[Nager API] ${countryCode} ${year}年加载失败:`, error);
+        }
+        return null;
+      }
+    }
+
+    // 获取缓存的Nager API数据
+    function getCachedNagerData(countryCode, year) {
+      try {
+        const cacheKey = `nager_holiday_${countryCode}_${year}`;
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          const data = JSON.parse(cached);
+          // 缓存有效期1年
+          if (data.data && Date.now() - data.timestamp < 365 * 24 * 60 * 60 * 1000) {
+            return data.data;
+          }
+        }
+      } catch (e) {
+        console.warn('读取Nager API缓存失败:', e);
+      }
+      return null;
     }
 
     // 从 GitHub 加载节假日数据
@@ -1347,46 +1662,81 @@
     const loadingDataCache = new Map();
 
     // 智能加载节假日数据（带缓存和降级）
-    async function loadHolidayDataForYear(year) {
+    async function loadHolidayDataForYear(country, year) {
+      const cacheKey = `${country}-${year}`;
       // 如果正在加载，等待加载完成
-      if (loadingDataCache.has(year)) {
-        return await loadingDataCache.get(year);
+      if (loadingDataCache.has(cacheKey)) {
+        return await loadingDataCache.get(cacheKey);
       }
 
       // 创建加载 Promise
       const loadPromise = (async () => {
-        // 1. 先检查本地缓存
-        const cached = getCachedHolidayData(year);
-        if (cached) {
-          return cached;
-        }
+        // 中国：使用GitHub API
+        if (country === 'china') {
+          // 1. 先检查本地缓存
+          const cached = getCachedHolidayData(year);
+          if (cached) {
+            return cached;
+          }
 
-        // 2. 尝试从 GitHub 加载
-        const githubData = await loadHolidayDataFromGitHub(year);
-        if (githubData) {
-          return githubData;
-        }
+          // 2. 尝试从 GitHub 加载
+          const githubData = await loadHolidayDataFromGitHub(year);
+          if (githubData) {
+            return githubData;
+          }
 
+          // 3. 降级：使用硬编码的本地数据
+          console.warn(`无法加载 ${year} 年节假日数据，使用本地缓存`);
+          return getLocalHolidayData(country, year);
+        }
+        
+        // 其他国家：使用Nager.Date API
+        const countryCode = COUNTRY_CODE_MAP[country];
+        if (!countryCode) {
+          // 没有API支持，直接使用硬编码数据
+          return getLocalHolidayData(country, year);
+        }
+        
+        // 1. 先检查Nager API缓存
+        const cachedNager = getCachedNagerData(countryCode, year);
+        if (cachedNager) {
+          return cachedNager;
+        }
+        
+        // 2. 尝试从Nager.Date API加载
+        const nagerData = await loadHolidayDataFromNagerAPI(countryCode, year);
+        if (nagerData) {
+          return nagerData;
+        }
+        
         // 3. 降级：使用硬编码的本地数据
-        console.warn(`无法加载 ${year} 年节假日数据，使用本地缓存`);
-        return getLocalHolidayData(year);
+        console.warn(`无法从API加载 ${country} ${year} 年节假日数据，使用本地缓存`);
+        return getLocalHolidayData(country, year);
       })();
 
       // 缓存加载 Promise
-      loadingDataCache.set(year, loadPromise);
+      loadingDataCache.set(cacheKey, loadPromise);
       
       try {
         const result = await loadPromise;
         return result;
       } finally {
         // 加载完成后清除缓存（保留一段时间，避免重复请求）
-        setTimeout(() => loadingDataCache.delete(year), 5000);
+        setTimeout(() => loadingDataCache.delete(cacheKey), 5000);
       }
     }
 
     // 获取本地硬编码数据（降级方案）
-    function getLocalHolidayData(year) {
-      const config = HOLIDAY_CONFIG.china;
+    function getLocalHolidayData(country, year) {
+      const config = HOLIDAY_CONFIG[country];
+      if (!config) {
+        console.warn(`[节假日数据] ${country} 没有配置数据`);
+        return {
+          yearSpecific: {},
+          makeupWorkdays: {}
+        };
+      }
+      
       const result = {
         yearSpecific: config.yearSpecific[year] ? { [year]: config.yearSpecific[year] } : {},
         makeupWorkdays: config.makeupWorkdays[year] ? { [year]: config.makeupWorkdays[year] } : {}
@@ -1394,7 +1744,7 @@
       
       // 如果本地也没有该年份数据，至少返回空对象（会使用固定节假日）
       if (!result.yearSpecific[year] && !result.makeupWorkdays[year]) {
-        console.warn(`[节假日数据] ${year}年本地数据也不存在，将仅使用固定节假日`);
+        console.warn(`[节假日数据] ${country} ${year}年本地数据也不存在，将仅使用固定节假日`);
         result.yearSpecific = {};
         result.makeupWorkdays = {};
       } else {
@@ -1425,8 +1775,8 @@
         years.splice(0, years.length, ...missingYears);
       }
       
-      // 并行加载，不阻塞页面
-      Promise.all(years.map(year => loadHolidayDataForYear(year)))
+      // 并行加载中国数据，不阻塞页面（其他国家按需加载）
+      Promise.all(years.map(year => loadHolidayDataForYear('china', year)))
         .then(() => {
           localStorage.setItem('holiday_data_last_update', String(currentYear));
           console.log('节假日数据预加载完成');
@@ -1475,6 +1825,23 @@
           });
         } else {
           console.log(`[节假日] ${year}年缓存数据为空或不存在，仅使用固定节假日`);
+        }
+      } else {
+        // 对于其他国家，尝试从Nager API缓存中获取
+        const countryCode = COUNTRY_CODE_MAP[country];
+        if (countryCode) {
+          const nagerData = getCachedNagerData(countryCode, year);
+          if (nagerData?.yearSpecific?.[year]?.length > 0) {
+            console.log(`[节假日] 使用缓存的Nager API ${countryCode} ${year}年数据，节假日数量:`, nagerData.yearSpecific[year].length);
+            // 先清除固定节假日中可能重复的（API数据优先级更高）
+            nagerData.yearSpecific[year].forEach(({ date, label }) => {
+              // 移除可能存在的固定节假日（使用完整日期格式）
+              const recurringDate = date.substring(5); // 提取 MM-DD
+              map.delete(`${year}-${recurringDate}`);
+              // 添加API数据
+              map.set(date, label);
+            });
+          }
         }
       }
       
@@ -1749,32 +2116,64 @@
         return renderMessage('Date range error:<br>' + allErrors.join('<br>'));
       }
 
-      // 对于中国，确保所需年份的节假日数据已加载
-      if (country === 'china') {
+      // 确保所需年份的节假日数据已加载（优化：优先使用缓存，异步加载缺失数据）
+      {
         const startYear = startDate.getFullYear();
         const endYear = endDate.getFullYear();
         const yearsToLoad = new Set();
         for (let y = startYear; y <= endYear; y++) {
           yearsToLoad.add(y);
         }
-        console.log(`[节假日数据] 开始加载年份:`, Array.from(yearsToLoad));
-        // 并行加载所有需要的年份数据
-        const loadResults = await Promise.all(Array.from(yearsToLoad).map(async year => {
-          const data = await loadHolidayDataForYear(year);
-          console.log(`[节假日数据] ${year}年加载结果:`, {
-            hasHolidays: data?.yearSpecific?.[year]?.length > 0,
-            hasMakeup: data?.makeupWorkdays?.[year]?.length > 0,
-            holidayCount: data?.yearSpecific?.[year]?.length || 0,
-            makeupCount: data?.makeupWorkdays?.[year]?.length || 0
+        
+        // 检查哪些年份需要加载（没有缓存的）
+        const missingYears = [];
+        const countryCode = COUNTRY_CODE_MAP[country];
+        
+        for (const year of yearsToLoad) {
+          let hasCache = false;
+          if (country === 'china') {
+            hasCache = !!getCachedHolidayData(year);
+          } else if (countryCode) {
+            hasCache = !!getCachedNagerData(countryCode, year);
+          }
+          
+          // 如果有硬编码数据，也算有数据（不需要等待API）
+          const config = HOLIDAY_CONFIG[country];
+          if (config && (config.recurring?.length > 0 || config.yearSpecific?.[year]?.length > 0)) {
+            hasCache = true; // 有硬编码数据，可以立即计算
+          }
+          
+          if (!hasCache) {
+            missingYears.push(year);
+          }
+        }
+        
+        // 如果有缺失数据，异步加载（不阻塞计算）
+        if (missingYears.length > 0) {
+          console.log(`[节假日数据] 异步加载缺失年份:`, missingYears);
+          // 使用较短的超时（2秒），超时后使用硬编码数据
+          Promise.race([
+            Promise.all(missingYears.map(year => loadHolidayDataForYear(country, year))),
+            new Promise(resolve => setTimeout(resolve, 2000))
+          ]).then(() => {
+            // 清除缓存，让下次计算使用新数据
+            missingYears.forEach(year => {
+              holidayLabelCache.delete(`${country}-${year}`);
+              makeupLabelCache.delete(`${country}-${year}`);
+            });
+            console.log(`[节假日数据] 异步加载完成`);
+          }).catch(err => {
+            console.warn(`[节假日数据] 异步加载失败:`, err);
           });
-          return { year, data };
-        }));
-        // 清除缓存，强制重新获取最新数据
-        yearsToLoad.forEach(year => {
-          holidayLabelCache.delete(`china-${year}`);
-          makeupLabelCache.delete(`china-${year}`);
-        });
-        console.log(`[节假日数据] 所有年份数据加载完成`);
+        }
+      }
+
+      // 预先构建所有需要的年份的节假日和调休 Map（避免在循环中重复构建）
+      const startYear = startDate.getFullYear();
+      const endYear = endDate.getFullYear();
+      for (let y = startYear; y <= endYear; y++) {
+        getHolidayLabelMap(country, y);
+        getMakeupLabelMap(country, y);
       }
 
       const leaveData = calculateLeaveData();
@@ -1853,12 +2252,22 @@
       const iso = toInputDate(date);
       const year = date.getFullYear();
       
-      // 对于中国，确保数据已加载（同步检查，异步触发）
+      // 对于所有国家，确保数据已加载（同步检查，异步触发）
+      const cacheKey = `${country}-${year}`;
       if (country === 'china') {
         const cached = getCachedHolidayData(year);
-        if (!cached && !loadingDataCache.has(year)) {
+        if (!cached && !loadingDataCache.has(cacheKey)) {
           // 触发后台加载
-          loadHolidayDataForYear(year);
+          loadHolidayDataForYear(country, year);
+        }
+      } else {
+        const countryCode = COUNTRY_CODE_MAP[country];
+        if (countryCode) {
+          const cached = getCachedNagerData(countryCode, year);
+          if (!cached && !loadingDataCache.has(cacheKey)) {
+            // 触发后台加载
+            loadHolidayDataForYear(country, year);
+          }
         }
       }
       

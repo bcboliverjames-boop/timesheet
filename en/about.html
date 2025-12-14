@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - Freelancer Income Calculator</title>
+  <meta name="description" content="Learn about the Freelancer Income Calculator, its development background, design philosophy, and use cases. Designed specifically for freelancers, especially SAP consultants.">
+  <style>
+    /* Apple-inspired Design System */
+    :root {
+      color-scheme: light dark;
+      --system-blue: #007AFF;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --background-primary: #FFFFFF;
+      --background-secondary: #F2F2F7;
+      --border-color: #C6C6C8;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --background-primary: #1C1C1E;
+        --background-secondary: #000000;
+        --border-color: #38383A;
+      }
+    }
+
+    [data-theme="dark"] {
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --background-primary: #1C1C1E;
+      --background-secondary: #000000;
+      --border-color: #38383A;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 2.5rem 1.5rem;
+      background: var(--background-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--background-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 2.5rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 0 1rem 0;
+      color: var(--text-primary);
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2rem 0 1rem 0;
+      color: var(--text-primary);
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    p {
+      margin: 1rem 0;
+      color: var(--text-secondary);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--system-blue);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+    }
+
+    .footer a {
+      color: var(--system-blue);
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .highlight-box {
+      background: var(--background-secondary);
+      border-left: 3px solid var(--system-blue);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: var(--radius-sm);
+    }
+
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .feature-item {
+      padding: 1.5rem;
+      background: var(--background-secondary);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .feature-item h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0 0 0.75rem 0;
+      color: var(--text-primary);
+    }
+
+    .feature-item p {
+      margin: 0;
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/en" class="back-link">← Back to Home</a>
+    <h1>About Us</h1>
+
+    <h2>Project Background</h2>
+    <p>The Freelancer Income Calculator is a practical tool developed by an SAP freelancer to help freelancers (especially SAP consultants) quickly and accurately calculate project income.</p>
+    <p>As freelancers, we often need to calculate income for different project periods, considering factors such as leave, overtime, and holidays. Traditional manual calculations are both tedious and error-prone, so we developed this tool to make income calculation simple and efficient.</p>
+
+    <div class="highlight-box">
+      <p><strong>Design Philosophy</strong>: Simple, accurate, and practical. All calculations are performed locally in your browser, protecting your privacy. No registration required, completely free.</p>
+    </div>
+
+    <h2>Core Features</h2>
+    <div class="feature-list">
+      <div class="feature-item">
+        <h3>Multi-Country Support</h3>
+        <p>Supports China, United States, and Europe, automatically identifies statutory holidays and currency</p>
+      </div>
+      <div class="feature-item">
+        <h3>Flexible Salary Types</h3>
+        <p>Supports daily, hourly, and monthly calculation methods to meet different project needs</p>
+      </div>
+      <div class="feature-item">
+        <h3>Leave & Overtime Management</h3>
+        <p>Supports multiple leave and overtime ranges for precise calculation of actual workdays</p>
+      </div>
+      <div class="feature-item">
+        <h3>Smart Holiday Recognition</h3>
+        <p>Automatically excludes weekends and statutory holidays, supports makeup workday recognition</p>
+      </div>
+      <div class="feature-item">
+        <h3>Detailed Export</h3>
+        <p>One-click Excel export with complete paid days and excluded dates details</p>
+      </div>
+      <div class="feature-item">
+        <h3>Privacy Protection</h3>
+        <p>All calculations performed locally, data not uploaded to server, protecting your privacy</p>
+      </div>
+    </div>
+
+    <h2>Target Audience</h2>
+    <p>This tool is particularly suitable for:</p>
+    <ul>
+      <li><strong>SAP Freelancers</strong>: Quickly calculate project income, manage leave and overtime</li>
+      <li><strong>Other IT Freelancers</strong>: Calculate project income by day/hour/month</li>
+      <li><strong>Freelance Designers, Copywriters, etc.</strong>: Need to accurately calculate workdays and income</li>
+      <li><strong>Project Management Personnel</strong>: Need to calculate project costs and income</li>
+    </ul>
+
+    <h2>Technical Features</h2>
+    <ul>
+      <li><strong>Pure Frontend</strong>: No backend server required, all calculations performed locally in browser</li>
+      <li><strong>Responsive Design</strong>: Perfect adaptation for desktop, tablet, and mobile</li>
+      <li><strong>Apple-style UI</strong>: Clean and beautiful user interface with excellent user experience</li>
+      <li><strong>Dark Mode Support</strong>: Automatically adapts to system theme, supports manual switching</li>
+      <li><strong>Multi-language Support</strong>: Available in Chinese and English</li>
+      <li><strong>Data Caching</strong>: Intelligent holiday data caching to improve loading speed</li>
+    </ul>
+
+    <h2>Future Plans</h2>
+    <p>We plan to continuously improve this tool. Future features may include:</p>
+    <ul>
+      <li>Support for more countries/regions' holiday data</li>
+      <li>Additional salary calculation modes</li>
+      <li>Export to other formats (PDF, CSV, etc.)</li>
+      <li>History record functionality</li>
+      <li>Multi-project comparison</li>
+    </ul>
+    <p>If you have any suggestions or requirements, please contact us via email!</p>
+
+    <h2>Contact Us</h2>
+    <p>If you encounter any issues while using the tool, or have any suggestions and feedback, please contact us:</p>
+    <p>Email: <a href="mailto:bcboliverjames@gmail.com">bcboliverjames@gmail.com</a></p>
+    <p>We will reply as soon as possible after receiving your email.</p>
+
+    <div class="footer">
+      <p>
+        <a href="/en">Back to Home</a> |
+        <a href="/en/help.html">Help</a> |
+        <a href="/en/faq.html">FAQ</a> |
+        <a href="/en/about.html">About</a> |
+        <a href="/en/privacy.html">Privacy Policy</a> |
+        <a href="/about.html">关于我们（中文）</a>
+      </p>
+      <p>&copy; 2024 Freelancer Income Calculator. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
+

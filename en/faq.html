@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ - Freelancer Income Calculator</title>
+  <meta name="description" content="Frequently asked questions about Freelancer Income Calculator, including usage, calculation formulas, and features.">
+  <style>
+    /* Apple-inspired Design System */
+    :root {
+      color-scheme: light dark;
+      --system-blue: #007AFF;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --background-primary: #FFFFFF;
+      --background-secondary: #F2F2F7;
+      --border-color: #C6C6C8;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --background-primary: #1C1C1E;
+        --background-secondary: #000000;
+        --border-color: #38383A;
+      }
+    }
+
+    [data-theme="dark"] {
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --background-primary: #1C1C1E;
+      --background-secondary: #000000;
+      --border-color: #38383A;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 2.5rem 1.5rem;
+      background: var(--background-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--background-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 2.5rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 0 1rem 0;
+      color: var(--text-primary);
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2rem 0 1rem 0;
+      color: var(--text-primary);
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .faq-item {
+      margin: 1.5rem 0;
+      padding: 1.5rem;
+      background: var(--background-secondary);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .faq-question {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0 0 0.75rem 0;
+      color: var(--text-primary);
+    }
+
+    .faq-answer {
+      margin: 0;
+      color: var(--text-secondary);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--system-blue);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+    }
+
+    .footer a {
+      color: var(--system-blue);
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/en" class="back-link">← Back to Home</a>
+    <h1>Frequently Asked Questions</h1>
+
+    <h2>Basic Usage</h2>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: Is this calculator free?</div>
+      <div class="faq-answer">A: Yes, completely free. All calculations are performed locally in your browser. No registration or payment required.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: Do I need to create an account?</div>
+      <div class="faq-answer">A: No. This is a pure frontend application. All data is stored locally in your browser and is not uploaded to any server.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: Which countries/regions are supported?</div>
+      <div class="faq-answer">A: Currently supports China, United States, and Europe. The system will automatically identify statutory holidays and currency based on your selection.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: Can I calculate income across multiple years?</div>
+      <div class="faq-answer">A: Yes, but the date range is limited to last year, current year, and next year. The system will automatically load holiday data for the corresponding years.</div>
+    </div>
+
+    <h2>Features</h2>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: Why are certain dates automatically excluded?</div>
+      <div class="faq-answer">A: The system automatically excludes weekends (Saturday and Sunday) and statutory holidays. You can view the specific exclusion reason for each date in the "Excluded Dates" table.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: How do I set half-day leave?</div>
+      <div class="faq-answer">A: When adding a leave range, select "Leave Period" as "Half Day (Morning)" or "Half Day (Afternoon)". The system will automatically calculate it as 0.5 days.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: How is overtime calculated?</div>
+      <div class="faq-answer">A: The system defaults to 8 hours = 1 day. You can manually adjust overtime hours, with a maximum of 24 hours per day (equals 3 days). For example, if you work 16 hours overtime in one day, it counts as 2 days.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: What's the difference between monthly salary calculation and daily/hourly?</div>
+      <div class="faq-answer">A: Monthly salary uses a special formula: Total Income = (Scheduled Workdays - Leave Days + Overtime Days) × (Monthly Salary ÷ Scheduled Workdays). This provides a more accurate calculation for monthly salary arrangements. Daily and hourly rates are calculated directly based on workdays.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: What are "Scheduled Workdays"?</div>
+      <div class="faq-answer">A: Scheduled Workdays refer to the total workdays in the calculation date range, excluding holidays and weekends, but not considering leave and overtime. This value is used as a baseline for monthly salary calculations.</div>
+    </div>
+
+    <h2>Data & Privacy</h2>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: Is my calculation data saved to the server?</div>
+      <div class="faq-answer">A: No. All calculations are performed locally in your browser, and data is not uploaded to any server. We only store your theme preference (dark/light mode) and holiday data cache locally to improve your experience.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: Where does the holiday data come from?</div>
+      <div class="faq-answer">A: For China, the system fetches the latest data from public holiday data sources on GitHub. For the United States and Europe, fixed holiday rules are used. All data is cached locally to improve loading speed.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: Why is Google Analytics needed?</div>
+      <div class="faq-answer">A: Google Analytics helps us understand website usage, such as traffic and user behavior. This data is anonymous and does not identify you personally. You can disable tracking through your browser's privacy settings.</div>
+    </div>
+
+    <h2>Export & Results</h2>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: What does the exported Excel file contain?</div>
+      <div class="faq-answer">A: The Excel file contains three sections: 1) Basic information (country/region, currency, period, workdays, total hours, total income, salary type); 2) Paid days details (number, date, paid days, payment note, work content); 3) Excluded dates details (number, date, exclusion reason, note).</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: Can I edit the exported Excel file?</div>
+      <div class="faq-answer">A: Yes. The exported Excel file is in standard .xls format and can be opened and edited in Excel, WPS, and other software. We recommend editing "Work Content" and "Note" on the webpage before exporting for a more complete file.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: Why doesn't the calculation result match my expectation?</div>
+      <div class="faq-answer">A: Please check the following: 1) Is the date range correct? 2) Are leave and overtime dates within the calculation range? 3) Is the salary type and amount correct? 4) Check the "Excluded Dates" table to see which dates were excluded. If you still have issues, please contact us.</div>
+    </div>
+
+    <h2>Technical Support</h2>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: How can I contact you if I encounter problems?</div>
+      <div class="faq-answer">A: You can use the contact button in the top right corner of the page, or send an email directly to <a href="mailto:bcboliverjames@gmail.com">bcboliverjames@gmail.com</a>. We will reply as soon as possible.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: Can I suggest new features?</div>
+      <div class="faq-answer">A: Absolutely! We welcome your suggestions and feedback. Please contact us via email, and we will carefully consider each suggestion.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: Is this tool suitable for SAP freelancers?</div>
+      <div class="faq-answer">A: Yes! This tool was developed by an SAP freelancer specifically for freelancers (especially SAP consultants) to quickly calculate project income. It supports multiple salary types and can flexibly handle leave, overtime, and other situations.</div>
+    </div>
+
+    <div class="footer">
+      <p>
+        <a href="/en">Back to Home</a> |
+        <a href="/en/help.html">Help</a> |
+        <a href="/en/faq.html">FAQ</a> |
+        <a href="/en/about.html">About</a> |
+        <a href="/en/privacy.html">Privacy Policy</a> |
+        <a href="/faq.html">常见问题（中文）</a>
+      </p>
+      <p>&copy; 2024 Freelancer Income Calculator. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
+

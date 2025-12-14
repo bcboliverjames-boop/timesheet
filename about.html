@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关于我们 - 自由职业收入计算器</title>
+  <meta name="description" content="了解自由职业收入计算器的开发背景、设计理念和使用场景，专为自由职业者特别是SAP顾问设计。">
+  <style>
+    /* Apple-inspired Design System */
+    :root {
+      color-scheme: light dark;
+      --system-blue: #007AFF;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --background-primary: #FFFFFF;
+      --background-secondary: #F2F2F7;
+      --border-color: #C6C6C8;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --background-primary: #1C1C1E;
+        --background-secondary: #000000;
+        --border-color: #38383A;
+      }
+    }
+
+    [data-theme="dark"] {
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --background-primary: #1C1C1E;
+      --background-secondary: #000000;
+      --border-color: #38383A;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 2.5rem 1.5rem;
+      background: var(--background-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--background-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 2.5rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 0 1rem 0;
+      color: var(--text-primary);
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2rem 0 1rem 0;
+      color: var(--text-primary);
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    p {
+      margin: 1rem 0;
+      color: var(--text-secondary);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--system-blue);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+    }
+
+    .footer a {
+      color: var(--system-blue);
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .highlight-box {
+      background: var(--background-secondary);
+      border-left: 3px solid var(--system-blue);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: var(--radius-sm);
+    }
+
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .feature-item {
+      padding: 1.5rem;
+      background: var(--background-secondary);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .feature-item h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0 0 0.75rem 0;
+      color: var(--text-primary);
+    }
+
+    .feature-item p {
+      margin: 0;
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back-link">← 返回首页</a>
+    <h1>关于我们</h1>
+
+    <h2>项目背景</h2>
+    <p>自由职业收入计算器是由一位SAP自由顾问开发的实用工具，旨在帮助自由职业者（特别是SAP顾问）快速、准确地计算项目收入。</p>
+    <p>作为自由职业者，我们经常需要计算不同项目期间的收入，考虑请假、加班、节假日等因素。传统的手工计算既繁琐又容易出错，因此我们开发了这个工具，让收入计算变得简单高效。</p>
+
+    <div class="highlight-box">
+      <p><strong>开发理念</strong>：简单、准确、实用。所有计算都在浏览器本地完成，保护您的隐私，无需注册，完全免费。</p>
+    </div>
+
+    <h2>核心功能</h2>
+    <div class="feature-list">
+      <div class="feature-item">
+        <h3>多国家支持</h3>
+        <p>支持中国、美国、欧洲，自动识别法定节假日和币种</p>
+      </div>
+      <div class="feature-item">
+        <h3>灵活薪资方案</h3>
+        <p>支持日薪、时薪、月薪三种计算方式，满足不同项目需求</p>
+      </div>
+      <div class="feature-item">
+        <h3>请假加班管理</h3>
+        <p>支持多段请假和加班设置，精确计算实际工作天数</p>
+      </div>
+      <div class="feature-item">
+        <h3>智能节假日识别</h3>
+        <p>自动排除周末和法定节假日，支持调休补班识别</p>
+      </div>
+      <div class="feature-item">
+        <h3>详细结果导出</h3>
+        <p>一键导出Excel报表，包含完整的计薪日和排除日期明细</p>
+      </div>
+      <div class="feature-item">
+        <h3>隐私保护</h3>
+        <p>所有计算本地完成，数据不上传服务器，保护您的隐私</p>
+      </div>
+    </div>
+
+    <h2>适用人群</h2>
+    <p>本工具特别适合以下人群：</p>
+    <ul>
+      <li><strong>SAP自由顾问</strong>：快速计算项目收入，管理请假和加班</li>
+      <li><strong>其他IT自由职业者</strong>：按日/时/月计算项目收入</li>
+      <li><strong>自由设计师、文案等</strong>：需要精确计算工作天数和收入</li>
+      <li><strong>项目管理相关人员</strong>：需要计算项目成本和收入</li>
+    </ul>
+
+    <h2>技术特点</h2>
+    <ul>
+      <li><strong>纯前端实现</strong>：无需后端服务器，所有计算在浏览器本地完成</li>
+      <li><strong>响应式设计</strong>：完美适配桌面、平板和手机</li>
+      <li><strong>Apple风格UI</strong>：简洁美观的用户界面，提供良好的使用体验</li>
+      <li><strong>深色模式支持</strong>：自动适配系统主题，支持手动切换</li>
+      <li><strong>多语言支持</strong>：提供中文和英文两个版本</li>
+      <li><strong>数据缓存</strong>：智能缓存节假日数据，提升加载速度</li>
+    </ul>
+
+    <h2>未来规划</h2>
+    <p>我们计划持续改进这个工具，未来可能包括：</p>
+    <ul>
+      <li>支持更多国家/地区的节假日数据</li>
+      <li>添加更多薪资计算模式</li>
+      <li>支持数据导出到其他格式（PDF、CSV等）</li>
+      <li>添加历史记录功能</li>
+      <li>支持多项目对比</li>
+    </ul>
+    <p>如果您有任何建议或需求，欢迎通过邮件联系我们！</p>
+
+    <h2>联系我们</h2>
+    <p>如果您在使用过程中遇到问题，或有任何建议和反馈，欢迎联系我们：</p>
+    <p>邮箱：<a href="mailto:bcboliverjames@gmail.com">bcboliverjames@gmail.com</a></p>
+    <p>我们会在收到邮件后尽快回复。</p>
+
+    <div class="footer">
+      <p>
+        <a href="/">返回首页</a> |
+        <a href="/help.html">使用帮助</a> |
+        <a href="/faq.html">常见问题</a> |
+        <a href="/about.html">关于我们</a> |
+        <a href="/privacy.html">隐私政策</a> |
+        <a href="/en/about.html">About (English)</a>
+      </p>
+      <p>&copy; 2024 自由职业收入计算器。保留所有权利。</p>
+    </div>
+  </div>
+</body>
+</html>
+

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- Chinese Pages -->
+  <url>
+    <loc>https://www.xmoto.top/</loc>
+    <lastmod>2024-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.xmoto.top/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.xmoto.top/en"/>
+  </url>
+  <url>
+    <loc>https://www.xmoto.top/help.html</loc>
+    <lastmod>2024-12-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.xmoto.top/help.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.xmoto.top/en/help.html"/>
+  </url>
+  <url>
+    <loc>https://www.xmoto.top/faq.html</loc>
+    <lastmod>2024-12-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.xmoto.top/faq.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.xmoto.top/en/faq.html"/>
+  </url>
+  <url>
+    <loc>https://www.xmoto.top/about.html</loc>
+    <lastmod>2024-12-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.xmoto.top/about.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.xmoto.top/en/about.html"/>
+  </url>
+  <url>
+    <loc>https://www.xmoto.top/privacy.html</loc>
+    <lastmod>2024-12-14</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.xmoto.top/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.xmoto.top/en/privacy.html"/>
+  </url>
+  
+  <!-- English Pages -->
+  <url>
+    <loc>https://www.xmoto.top/en</loc>
+    <lastmod>2024-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.xmoto.top/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.xmoto.top/en"/>
+  </url>
+  <url>
+    <loc>https://www.xmoto.top/en/help.html</loc>
+    <lastmod>2024-12-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.xmoto.top/help.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.xmoto.top/en/help.html"/>
+  </url>
+  <url>
+    <loc>https://www.xmoto.top/en/faq.html</loc>
+    <lastmod>2024-12-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.xmoto.top/faq.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.xmoto.top/en/faq.html"/>
+  </url>
+  <url>
+    <loc>https://www.xmoto.top/en/about.html</loc>
+    <lastmod>2024-12-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.xmoto.top/about.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.xmoto.top/en/about.html"/>
+  </url>
+  <url>
+    <loc>https://www.xmoto.top/en/privacy.html</loc>
+    <lastmod>2024-12-14</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.xmoto.top/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.xmoto.top/en/privacy.html"/>
+  </url>
+</urlset>
+

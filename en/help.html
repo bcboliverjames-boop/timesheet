@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help - Freelancer Income Calculator</title>
+  <meta name="description" content="Help guide for Freelancer Income Calculator. Learn how to calculate income, set leave and overtime, export results, and more.">
+  <style>
+    /* Apple-inspired Design System */
+    :root {
+      color-scheme: light dark;
+      --system-blue: #007AFF;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --background-primary: #FFFFFF;
+      --background-secondary: #F2F2F7;
+      --border-color: #C6C6C8;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --background-primary: #1C1C1E;
+        --background-secondary: #000000;
+        --border-color: #38383A;
+      }
+    }
+
+    [data-theme="dark"] {
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --background-primary: #1C1C1E;
+      --background-secondary: #000000;
+      --border-color: #38383A;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 2.5rem 1.5rem;
+      background: var(--background-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--background-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 2.5rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 0 1rem 0;
+      color: var(--text-primary);
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2rem 0 1rem 0;
+      color: var(--text-primary);
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.75rem 0;
+      color: var(--text-primary);
+    }
+
+    p {
+      margin: 1rem 0;
+      color: var(--text-secondary);
+    }
+
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    li {
+      margin: 0.5rem 0;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--system-blue);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+    }
+
+    .footer a {
+      color: var(--system-blue);
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .highlight {
+      background: var(--background-secondary);
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
+      font-size: 0.9em;
+    }
+
+    .note {
+      background: var(--background-secondary);
+      border-left: 3px solid var(--system-blue);
+      padding: 1rem;
+      margin: 1.5rem 0;
+      border-radius: var(--radius-sm);
+    }
+
+    .note p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/en" class="back-link">← Back to Home</a>
+    <h1>Help Guide</h1>
+
+    <h2>Quick Start</h2>
+    <p>The Freelancer Income Calculator helps you quickly calculate pre-tax income. Simply follow these steps:</p>
+    <ol>
+      <li>Select a time range (Last Month, Current Month, Next Month, or Custom)</li>
+      <li>Choose start and end dates</li>
+      <li>Select your country/region (to determine holidays and currency)</li>
+      <li>If you have leave or overtime, add the corresponding date ranges</li>
+      <li>Select a salary type (Daily, Hourly, or Monthly) and enter the amount</li>
+      <li>Click the "Calculate Income" button</li>
+    </ol>
+
+    <h2>Feature Details</h2>
+
+    <h3>1. Time Range Selection</h3>
+    <p>For quick selection, we provide the following options:</p>
+    <ul>
+      <li><strong>Last Month</strong>: Automatically sets to the first and last day of the previous month</li>
+      <li><strong>Current Month</strong>: Automatically sets to the first and last day of the current month</li>
+      <li><strong>Next Month</strong>: Automatically sets to the first and last day of the next month</li>
+      <li><strong>Custom</strong>: Allows you to freely select any date range</li>
+    </ul>
+    <div class="note">
+      <p><strong>Tip</strong>: If you manually modify dates, the time range will automatically switch to "Custom".</p>
+    </div>
+
+    <h3>2. Country/Region Selection</h3>
+    <p>After selecting a country/region, the system will:</p>
+    <ul>
+      <li>Automatically identify statutory holidays for that country/region</li>
+      <li>Automatically display the corresponding currency (China: CNY, United States: USD, Europe: EUR)</li>
+      <li>Calculate income based on that country/region's workday rules</li>
+    </ul>
+
+    <h3>3. Leave Settings</h3>
+    <p>If you have leave (unpaid days) during the calculation period, you can:</p>
+    <ul>
+      <li>Select "Has Leave" as "Yes"</li>
+      <li>Click "Add Leave Range" to add leave date ranges</li>
+      <li>Choose "Full Day", "Half Day (Afternoon)", or "Half Day (Morning)"</li>
+      <li>Add multiple leave ranges</li>
+    </ul>
+    <div class="note">
+      <p><strong>Note</strong>: Leave dates must be within the calculation date range, otherwise an error will be shown.</p>
+    </div>
+
+    <h3>4. Overtime Settings</h3>
+    <p>If you have overtime (paid) during the calculation period, you can:</p>
+    <ul>
+      <li>Select "Has Overtime" as "Yes"</li>
+      <li>Click "Add Overtime Range" to add overtime date ranges</li>
+      <li>The system will automatically calculate overtime hours (default 8 hours per day)</li>
+      <li>You can manually adjust overtime hours (maximum 24 hours per day, equals 3 days)</li>
+      <li>Add multiple overtime ranges</li>
+    </ul>
+    <div class="note">
+      <p><strong>Calculation Formula</strong>: 8 hours = 1 day, maximum 24 hours per calendar day = 3 days.</p>
+    </div>
+
+    <h3>5. Salary Type</h3>
+    <p>Three salary calculation methods are supported:</p>
+    <ul>
+      <li><strong>Daily</strong>: Enter your daily salary amount directly</li>
+      <li><strong>Hourly</strong>: Enter your hourly rate, the system will automatically convert to daily (×8 hours)</li>
+      <li><strong>Monthly</strong>: Enter your monthly salary, the system calculates using: Total Income = (Scheduled Workdays - Leave Days + Overtime Days) × (Monthly Salary ÷ Scheduled Workdays)</li>
+    </ul>
+
+    <h3>6. Viewing Results</h3>
+    <p>After calculation, you can:</p>
+    <ul>
+      <li>View total workdays and working hours</li>
+      <li>View total income (pre-tax)</li>
+      <li>View detailed paid days list and excluded dates list</li>
+      <li>Edit "Work Content" in the paid days table</li>
+      <li>Click "Export Results (Excel)" to export a detailed report</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <h3>Q: Why are certain dates excluded?</h3>
+    <p>A: The system automatically excludes weekends and statutory holidays. You can view specific reasons in the "Excluded Dates" table.</p>
+
+    <h3>Q: Why is monthly salary calculation different from daily/hourly?</h3>
+    <p>A: Monthly salary calculation uses a special formula that considers scheduled workdays, leave days, and overtime days to ensure more accurate calculations.</p>
+
+    <h3>Q: Can I calculate income across multiple years?</h3>
+    <p>A: Yes, but the date range is limited to last year, current year, and next year. The system will automatically load holiday data for the corresponding years.</p>
+
+    <h3>Q: What does the exported Excel file contain?</h3>
+    <p>A: The Excel file contains: Basic information (country, currency, period, etc.), paid days details (date, days, note, work content), excluded dates details (date, reason, note).</p>
+
+    <h3>Q: Is data saved to the server?</h3>
+    <p>A: No. All calculations are performed locally in your browser, and data is not uploaded to the server. We only store your theme preference and holiday data cache locally.</p>
+
+    <h2>Calculation Formulas</h2>
+
+    <h3>Daily/Hourly Calculation</h3>
+    <p>Total Income = Workdays × Converted Daily Rate</p>
+    <ul>
+      <li>Daily: Converted Daily Rate = Input Amount</li>
+      <li>Hourly: Converted Daily Rate = Input Amount × 8 hours</li>
+    </ul>
+
+    <h3>Monthly Calculation</h3>
+    <p>Total Income = (Scheduled Workdays - Leave Days + Overtime Days) × (Monthly Salary ÷ Scheduled Workdays)</p>
+    <p>Where:</p>
+    <ul>
+      <li>Scheduled Workdays = Total workdays in the calculation date range (excluding holidays and weekends, but not considering leave and overtime)</li>
+      <li>Leave Days = Total leave days you set</li>
+      <li>Overtime Days = Total overtime days you set (converted at 8 hours = 1 day)</li>
+    </ul>
+
+    <h2>Technical Support</h2>
+    <p>If you encounter any issues while using the calculator, or have any suggestions, please contact us:</p>
+    <p>Email: <a href="mailto:bcboliverjames@gmail.com">bcboliverjames@gmail.com</a></p>
+
+    <div class="footer">
+      <p>
+        <a href="/en">Back to Home</a> |
+        <a href="/en/help.html">Help</a> |
+        <a href="/en/faq.html">FAQ</a> |
+        <a href="/en/about.html">About</a> |
+        <a href="/en/privacy.html">Privacy Policy</a> |
+        <a href="/help.html">使用帮助（中文）</a>
+      </p>
+      <p>&copy; 2024 Freelancer Income Calculator. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
+

@@ -10,6 +10,73 @@ const countries = [
 
 const years = [2025, 2026];
 
+// 缓存相关常量
+const CACHE_KEY = 'verify_holidays_cache';
+const CACHE_UPDATED_KEY = 'verify_holidays_last_updated';
+const CACHE_MAX_AGE_MS = 25 * 24 * 60 * 60 * 1000; // 25天过期
+const MAX_RETRY = 5;
+const RETRY_DELAY_MS = 500; // 初始重试间隔，后续线性增长
+
+// 兼容 Node 环境无 localStorage 的情况
+const storage = typeof localStorage !== 'undefined' ? localStorage : null;
+
+// 缓存数据载入
+function loadHolidayCache() {
+  if (!storage) {
+    return { data: {}, lastUpdated: 0 };
+  }
+  try {
+    const raw = storage.getItem(CACHE_KEY);
+    const lastUpdated = parseInt(storage.getItem(CACHE_UPDATED_KEY), 10) || 0;
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object' && parsed.data) {
+        return { data: parsed.data, lastUpdated };
+      }
+    }
+  } catch (e) {
+    console.warn('读取节假日缓存失败，使用空缓存:', e);
+  }
+  return { data: {}, lastUpdated: 0 };
+}
+
+// 全局缓存对象（内存与 localStorage 同步）
+const holidayCache = loadHolidayCache();
+
+function persistHolidayCache() {
+  if (!storage) {
+    return;
+  }
+  try {
+    storage.setItem(CACHE_KEY, JSON.stringify({ data: holidayCache.data }));
+    storage.setItem(CACHE_UPDATED_KEY, String(holidayCache.lastUpdated || 0));
+  } catch (e) {
+    console.warn('保存节假日缓存失败:', e);
+  }
+}
+
+function getCachedHolidays(countryCode, year) {
+  return holidayCache.data?.[countryCode]?.[year] || null;
+}
+
+function shouldRefreshCache() {
+  if (!holidayCache.lastUpdated) return true;
+  return Date.now() - holidayCache.lastUpdated > CACHE_MAX_AGE_MS;
+}
+
+function updateCacheEntry(countryCode, year, holidays) {
+  if (!holidayCache.data[countryCode]) {
+    holidayCache.data[countryCode] = {};
+  }
+  holidayCache.data[countryCode][year] = holidays;
+  holidayCache.lastUpdated = Date.now();
+  persistHolidayCache();
+}
+
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // 代码中的硬编码节假日配置（从index.html提取）
 const HOLIDAY_CONFIG = {
   us: {
@@ -69,19 +136,44 @@ const HOLIDAY_CONFIG = {
 // 从Nager.Date API获取节假日数据
 async function fetchHolidaysFromAPI(countryCode, year) {
   const url = `https://date.nager.at/api/v3/PublicHolidays/${year}/${countryCode}`;
-  try {
-    const response = await fetch(url);
-    if (response.ok) {
-      const data = await response.json();
-      return data.map(item => ({
-        date: item.date,
-        label: item.localName || item.name
-      })).sort((a, b) => a.date.localeCompare(b.date));
-    }
-  } catch (error) {
-    console.error(`Error fetching ${countryCode} ${year}:`, error);
+
+  // 若缓存存在且未过期，直接返回缓存
+  const cached = getCachedHolidays(countryCode, year);
+  const needsRefresh = shouldRefreshCache();
+  if (cached && !needsRefresh) {
+    return cached;
   }
-  return null;
+
+  // 带重试的获取逻辑
+  let lastError = null;
+  for (let attempt = 1; attempt <= MAX_RETRY; attempt += 1) {
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        const data = await response.json();
+        const holidays = data.map(item => ({
+          date: item.date,
+          label: item.localName || item.name
+        })).sort((a, b) => a.date.localeCompare(b.date));
+
+        // 成功后更新缓存与 lastUpdated
+        updateCacheEntry(countryCode, year, holidays);
+        return holidays;
+      }
+      lastError = new Error(`Status ${response.status}`);
+      console.warn(`获取 ${countryCode} ${year} 节假日失败，状态码: ${response.status} (尝试 ${attempt}/${MAX_RETRY})`);
+    } catch (error) {
+      lastError = error;
+      console.warn(`获取 ${countryCode} ${year} 节假日异常 (尝试 ${attempt}/${MAX_RETRY}):`, error);
+    }
+
+    // 失败时等待后退避
+    await wait(RETRY_DELAY_MS * attempt);
+  }
+
+  // 全部尝试失败时保留旧缓存
+  console.error(`获取 ${countryCode} ${year} 节假日失败，已重试 ${MAX_RETRY} 次`, lastError);
+  return cached || null;
 }
 
 // 将硬编码的recurring日期转换为具体年份的日期
@@ -203,8 +295,19 @@ async function verifyHolidays() {
 // 运行验证
 if (typeof window === 'undefined') {
   // Node.js环境
-  const fetch = require('node-fetch');
-  global.fetch = fetch;
+  if (typeof fetch === 'undefined') {
+    try {
+      const nodeFetch = require('node-fetch');
+      global.fetch = nodeFetch;
+    } catch (error) {
+      console.error('当前 Node 版本未内置 fetch，且未安装 node-fetch，请安装依赖或升级 Node 以继续。', error);
+      process.exitCode = 1;
+      return;
+    }
+  } else {
+    // Node 18+ 已内置 fetch
+    global.fetch = fetch;
+  }
   verifyHolidays().catch(console.error);
 } else {
   // 浏览器环境

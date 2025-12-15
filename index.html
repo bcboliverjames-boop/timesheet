@@ -1295,6 +1295,23 @@
       india: '印度卢比 (INR)',
       indonesia: '印尼盾 (IDR)'
     };
+  // 按语言推导的默认国家映射（全小写匹配，先全量后基础语言码）
+  const LANGUAGE_DEFAULT_COUNTRY_MAP = {
+    'zh-cn': 'china',
+    zh: 'china',
+    'en-us': 'us',
+    'en-gb': 'uk',
+    en: 'us',
+    ja: 'japan',
+    ko: 'korea',
+    de: 'germany',
+    fr: 'france',
+    es: 'spain',
+    ru: 'russia',
+    id: 'indonesia',
+    hi: 'india',
+    nl: 'netherlands'
+  };
     const holidayLabelCache = new Map();
     const makeupLabelCache = new Map();
 
@@ -1856,6 +1873,39 @@
       currencyDisplay.value = countryCurrency(country);
     }
 
+  // 按语言设置默认国家，优先使用文档 lang，其次 navigator.languages / language
+  function resolveDefaultCountryByLanguage() {
+    const supported = new Set(Array.from(countrySelect?.options || []).map(opt => opt.value));
+    const candidates = [];
+    const docLang = document.documentElement?.lang;
+    if (docLang) candidates.push(docLang);
+    if (Array.isArray(navigator.languages)) candidates.push(...navigator.languages);
+    if (navigator.language) candidates.push(navigator.language);
+
+    for (const lang of candidates) {
+      if (!lang) continue;
+      const lower = String(lang).toLowerCase();
+      const exact = LANGUAGE_DEFAULT_COUNTRY_MAP[lower];
+      if (exact && supported.has(exact)) return exact;
+      const base = lower.split('-')[0];
+      const baseMatch = LANGUAGE_DEFAULT_COUNTRY_MAP[base];
+      if (baseMatch && supported.has(baseMatch)) return baseMatch;
+    }
+
+    // 默认回落到中国或第一个可选项
+    if (supported.has('china')) return 'china';
+    return countrySelect?.options?.[0]?.value || 'china';
+  }
+
+  function applyLanguageDefaultCountry() {
+    if (!countrySelect) return;
+    const resolved = resolveDefaultCountryByLanguage();
+    if (resolved && countrySelect.value !== resolved) {
+      countrySelect.value = resolved;
+    }
+    updateCurrencyDisplay();
+  }
+
     function getMakeupLabelMap(country, year) {
       const key = `${country}-${year}`;
       if (makeupLabelCache.has(key)) {
@@ -2025,7 +2075,7 @@
         type: 'overtime'
       });
       calculateLeaveData();
-      updateCurrencyDisplay();
+      applyLanguageDefaultCountry();
       countrySelect?.addEventListener('change', updateCurrencyDisplay);
       if (exportButton) {
         exportButton.addEventListener('click', handleExport);

@@ -9,6 +9,7 @@
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.xmoto.top/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.xmoto.top/en"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.xmoto.top/de"/>
   </url>
   <url>
     <loc>https://www.xmoto.top/help.html</loc>
@@ -46,11 +47,22 @@
   <!-- English Pages -->
   <url>
     <loc>https://www.xmoto.top/en</loc>
-    <lastmod>2024-12-14</lastmod>
+    <lastmod>2024-12-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.xmoto.top/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.xmoto.top/en"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.xmoto.top/de"/>
+  </url>
+  <!-- German Pages -->
+  <url>
+    <loc>https://www.xmoto.top/de</loc>
+    <lastmod>2024-12-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.xmoto.top/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.xmoto.top/en"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.xmoto.top/de"/>
   </url>
   <url>
     <loc>https://www.xmoto.top/en/help.html</loc>

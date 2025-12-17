@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freelancer-Einkommen & Stundenzettel für SAP-Berater (Vor Steuern)</title>
+  <meta name="description" content="Berechne dein Freelancer-Einkommen als SAP-Berater und exportiere einen professionellen Stundenzettel. Unterstützt Monats-, Wochen-, Tages- und Stundenberechnung mit automatischem Ausschluss von Wochenenden und Feiertagen.">
+  <meta name="keywords" content="SAP Berater,Freelancer,Einkommen berechnen,Stundenzettel,Timesheet,Vorsteuer,Einkommensrechner,Arbeitszeiterfassung">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.xmoto.top/de">
+  <meta property="og:title" content="Freelancer-Einkommen & Stundenzettel für SAP-Berater (Vor Steuern)">
+  <meta property="og:description" content="Berechne dein Freelancer-Einkommen als SAP-Berater und exportiere einen professionellen Stundenzettel.">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://www.xmoto.top/de">
+  <meta property="twitter:title" content="Freelancer-Einkommen & Stundenzettel für SAP-Berater (Vor Steuern)">
+  <meta property="twitter:description" content="Berechne dein Freelancer-Einkommen als SAP-Berater und exportiere einen professionellen Stundenzettel.">
+
+  <!-- hreflang for multilingual support -->
+  <link rel="alternate" hreflang="zh-CN" href="https://www.xmoto.top/">
+  <link rel="alternate" hreflang="en" href="https://www.xmoto.top/en">
+  <link rel="alternate" hreflang="de" href="https://www.xmoto.top/de">
+  <link rel="alternate" hreflang="x-default" href="https://www.xmoto.top/">
+
+  <style>
+    :root {
+      color-scheme: light dark;
+      --system-blue: #007AFF;
+      --system-blue-hover: #0051D5;
+      --system-gray: #8E8E93;
+      --background-primary: #FFFFFF;
+      --background-secondary: #F2F2F7;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --border-color: #C6C6C8;
+      --radius-md: 12px;
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background-primary: #1C1C1E;
+        --background-secondary: #000000;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --border-color: #38383A;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 2.5rem 1.5rem;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--background-secondary);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .top-right-buttons {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      display: flex;
+      gap: 0.75rem;
+      z-index: 10;
+    }
+
+    .lang-switcher {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(255, 255, 255, 0.9);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(12px);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .lang-switcher:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+    }
+
+    .lang-switcher svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .lang-menu {
+      position: absolute;
+      top: 52px;
+      right: 0;
+      min-width: 160px;
+      max-height: 260px;
+      background: var(--background-primary);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      padding: 0.4rem 0.2rem;
+      display: none;
+      overflow-y: auto;
+      font-size: 0.8rem;
+    }
+
+    .lang-menu a {
+      display: block;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .lang-menu a:hover {
+      background: var(--system-gray-light);
+      color: var(--text-primary);
+    }
+
+    .lang-menu a.is-active {
+      background: var(--system-blue);
+      color: #fff;
+    }
+
+    .lang-menu.open {
+      display: block;
+    }
+
+    .shell {
+      max-width: 1100px;
+      margin: 3.5rem auto 0;
+    }
+
+    .hero {
+      background: var(--background-primary);
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      margin: 0 0 0.75rem 0;
+      text-align: center;
+    }
+
+    .hero-subtitle {
+      margin: 0 0 1.5rem 0;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.98rem;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .hero-badge {
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .primary-button {
+      padding: 0.9rem 1.6rem;
+      border-radius: 999px;
+      border: none;
+      background: var(--system-blue);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.96rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 6px 16px rgba(0, 122, 255, 0.35);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .primary-button:hover {
+      background: var(--system-blue-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(0, 122, 255, 0.45);
+    }
+
+    .secondary-link {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      text-align: center;
+      margin: 0;
+    }
+
+    .secondary-link a {
+      color: var(--system-blue);
+      text-decoration: none;
+    }
+
+    .secondary-link a:hover {
+      text-decoration: underline;
+    }
+
+    .iframe-wrapper {
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
+      background: var(--background-primary);
+    }
+
+    iframe {
+      width: 100%;
+      height: 900px;
+      border: none;
+      background: transparent;
+    }
+
+    footer {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 1.75rem 1rem;
+      }
+
+      .shell {
+        margin-top: 3rem;
+      }
+
+      .hero {
+        padding: 1.75rem 1.25rem;
+      }
+
+      iframe {
+        height: 780px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-right-buttons">
+    <!-- Language Switcher -->
+    <div class="lang-switcher" aria-label="Sprache wechseln" title="Sprache wechseln">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+      </svg>
+      <div class="lang-menu">
+        <a href="/">中文</a>
+        <a href="/en">English</a>
+        <a href="/de" class="is-active">Deutsch</a>
+      </div>
+    </div>
+  </div>
+
+  <main class="shell">
+    <section class="hero" aria-label="SAP Freelancer Timesheet Einführung">
+      <h1 class="hero-title">Freelancer-Einkommen & Stundenzettel für SAP-Berater</h1>
+      <p class="hero-subtitle">
+        Plane und dokumentiere deine Projektzeiten als SAP-Freelancer – mit automatischer Berücksichtigung von Wochenenden
+        und Feiertagen. Ideal für Tagessatz- oder Stundensatz-Projekte, sowie Abrechnung gegenüber Kunden oder Agenturen.
+      </p>
+
+      <div class="hero-badges">
+        <span class="hero-badge">Entwickelt von einem SAP-Freelancer</span>
+        <span class="hero-badge">Unterstützt Monat / Woche / Tag / Stunde</span>
+        <span class="hero-badge">Arbeits- und Urlaubstage im Blick</span>
+        <span class="hero-badge">Export als Excel-Stundenzettel</span>
+      </div>
+
+      <div class="hero-actions">
+        <a href="#tool" class="primary-button">
+          Tool jetzt öffnen
+          <span>→</span>
+        </a>
+      </div>
+
+      <p class="secondary-link">
+        Oberfläche aktuell auf Englisch. Die Logik und Berechnungen sind für SAP-Berater weltweit identisch –
+        du kannst das Tool unten direkt nutzen.
+      </p>
+    </section>
+
+    <section id="tool" class="iframe-wrapper" aria-label="SAP Freelancer Timesheet Tool">
+      <!-- 使用相对路径，保证本地 file:// 预览和线上 https://www.xmoto.top/de 都能访问到英文工具 -->
+      <iframe src="../en/index.html" title="Freelancer Income Calculator (English)"></iframe>
+    </section>
+
+    <footer>
+      Deutschsprachige Einführung · Tool-Engine in Englisch · Geeignet für SAP-Freelancer in DACH & weltweit
+    </footer>
+  </main>
+</body>
+<script>
+  // Sprachumschalter: beim Klick öffnen/schließen, außerhalb klicken zum Schließen
+  (function () {
+    const switcher = document.querySelector('.lang-switcher');
+    const menu = switcher ? switcher.querySelector('.lang-menu') : null;
+    if (!switcher || !menu) return;
+
+    switcher.addEventListener('click', function (event) {
+      event.stopPropagation();
+      menu.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function () {
+      menu.classList.remove('open');
+    });
+  })();
+</script>
+</html>
+
+
